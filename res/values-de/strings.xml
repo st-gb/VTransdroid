@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VTrans</string>
+    <string name="btnTranslate">übersetzen</string>
+    <string name="btnSettings">Einstellungen</string>
+    <string name="stop">stopp</string>
+    <string name="lblEnglishText">Englischer Text:</string>
+    <string name="lblGermanText">Deutscher Text:</string>
+    <string name="logInTranslationEngine">in der Übersetzungs-Engine loggen(langsamer)</string>
+</resources>
