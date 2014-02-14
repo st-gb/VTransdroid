@@ -1,9 +1,9 @@
-package vtrans.dynlib;
+package vtrans.dynlib.attributes;
 
 public class WordAndGrammarPartName {
 
 	public String _strTranslation;
-	private String _strGrammarPartName;
+	public String _strGrammarPartName;
 
 	public WordAndGrammarPartName(String strTranslation, String strGrammarPartName)
 	{

@@ -1,0 +1,9 @@
+#see http://git-scm.com/docs/gitignore
+#"A trailing "/**" matches everything inside. 
+# For example, "abc/**" matches all files inside directory "abc", 
+# relative to the location of the .gitignore file, with infinite depth."
+obj/**
+assets/**
+bin/**
+jni/**
+**/*.class
