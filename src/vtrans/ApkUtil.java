@@ -1,4 +1,4 @@
-package vtrans.dynlib;
+package vtrans;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -9,7 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import vtrans.dynlib.TranslateActivity.GuiCallBacks;
+import vtrans.TranslateActivity.GuiCallBacks;
 
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;

@@ -1,9 +1,11 @@
-package vtrans.dynlib;
+package vtrans;
 
 import java.util.Date;
 
 import android.util.Log;
-import vtrans.dynlib.TranslateActivity.GuiCallBacks;
+import vtrans.TranslateActivity.GuiCallBacks;
+import vtrans.dynlib.SAX2serializer;
+import vtrans.dynlib.VTransDynLibJNI;
 
 /** Class that does the actual translation and GUI updates regarding 
  * translation. */

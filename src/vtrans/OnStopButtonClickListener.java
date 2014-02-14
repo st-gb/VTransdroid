@@ -1,4 +1,4 @@
-package vtrans.dynlib;
+package vtrans;
 
 import android.util.Log;
 import android.view.View;

@@ -2,7 +2,7 @@ package vtrans.dynlib;
 
 public class InitFunction {
 
-  enum Init_return_codes
+  public enum Init_return_codes
   {
     success,
     vocabularyFilePathIsEmpty,
@@ -19,7 +19,7 @@ public class InitFunction {
 		"loading main config file failed"
 	};
   
-	static String getInitMessage(final byte by)
+	public static String getInitMessage(final byte by)
 	{
 		if( by < InitMessage.length )
 			return InitMessage[by];

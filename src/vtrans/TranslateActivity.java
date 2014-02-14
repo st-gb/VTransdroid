@@ -1,7 +1,12 @@
-package vtrans.dynlib;
+package vtrans;
 
 //import vtrans.dynlib.VTransDynLibJNI.GuiCallBacks;
-import vtrans.dynlib.OnTranslateButtonClickListener;
+import vtrans.OnTranslateButtonClickListener;
+import vtrans.dynlib.InitFunction;
+import vtrans.dynlib.R;
+import vtrans.dynlib.R.id;
+import vtrans.dynlib.R.layout;
+
 import java.io.IOException;
 
 import android.app.Activity;

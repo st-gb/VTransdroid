@@ -36,7 +36,7 @@ public class SAX2serializer
     return s;
   }
 
-  protected static String serializeXML(final String xmlData)
+  public static String serializeXML(final String xmlData)
   {
     //XMLReader 
     String s = "";

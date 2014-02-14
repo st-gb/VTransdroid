@@ -1,8 +1,9 @@
-package vtrans.dynlib;
+package vtrans;
 
 import java.util.Date;
 
-import vtrans.dynlib.TranslateActivity.GuiCallBacks;
+import vtrans.TranslateActivity.GuiCallBacks;
+import vtrans.dynlib.VTransDynLibJNI;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;

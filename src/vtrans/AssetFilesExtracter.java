@@ -1,7 +1,11 @@
-package vtrans.dynlib;
+package vtrans;
 
 import java.io.IOException;
-import vtrans.dynlib.TranslateActivity.GuiCallBacks;
+
+import vtrans.TranslateActivity.GuiCallBacks;
+import vtrans.dynlib.InitFunction;
+import vtrans.dynlib.VTransDynLibJNI;
+import vtrans.dynlib.InitFunction.Init_return_codes;
 
 public class AssetFilesExtracter implements Runnable
 {

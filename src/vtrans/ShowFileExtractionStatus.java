@@ -1,6 +1,6 @@
-package vtrans.dynlib;
+package vtrans;
 
-import vtrans.dynlib.TranslateActivity.GuiCallBacks;
+import vtrans.TranslateActivity.GuiCallBacks;
 import android.util.Log;
 
 public class ShowFileExtractionStatus

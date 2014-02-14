@@ -1,4 +1,4 @@
-package vtrans.dynlib;
+package vtrans;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -22,6 +22,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 
 import java.util.List;
+
+import vtrans.dynlib.R;
+import vtrans.dynlib.R.id;
+import vtrans.dynlib.R.layout;
+import vtrans.dynlib.R.string;
+import vtrans.dynlib.R.xml;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On

@@ -8,12 +8,12 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     
     <application
-        android:name="vtrans.dynlib.VTransApp"
+        android:name="vtrans.VTransApp"
         android:debuggable="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name="vtrans.dynlib.TranslateActivity"
+            android:name="vtrans.TranslateActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,8 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="vtrans.dynlib.SettingsActivity"
-            android:label="@string/title_activity_settings" >
+            android:name="vtrans.vtrans.SettingsActivity        android:label="@string/title_activity_settings" >
         </activity>
     </application>
 

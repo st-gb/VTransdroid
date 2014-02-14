@@ -80,7 +80,7 @@ public class VTransDynLibJNI
 	
 	boolean _initFunctionCalledYet = false;
 	private String _currentWorkingDirToUse;
-	protected volatile boolean _translationStopped = false;
+	public volatile boolean _translationStopped = false;
 	
 	/** Native methods that is implemented by the native library which is 
    * packaged with this application. 
@@ -169,7 +169,7 @@ public class VTransDynLibJNI
    * startup. The library has already been unpacked into
    * /data/data/<package dir path>/lib/<dyn_lib>.so at
    * installation time by the package manager. */
-  static void loadDynLib(final String dynLibPathWoutExtension)
+  public static void loadDynLib(final String dynLibPathWoutExtension)
   {
   	Log.i("VTransDynLibJNI", "static beg");
       System.loadLibrary(dynLibPathWoutExtension);
@@ -180,7 +180,7 @@ public class VTransDynLibJNI
 	  return _initFunctionCalledYet;
   }
 	
-	void setPathes(final /*File*/ String rootDirectory)
+	public void setPathes(final /*File*/ String rootDirectory)
 	{
 		Log.i("VTransApp", "cacheDir:" + rootDirectory.toString() );
     _configurationDirFullPath = rootDirectory + File.separator + 

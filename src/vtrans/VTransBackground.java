@@ -1,7 +1,9 @@
-package vtrans.dynlib;
+package vtrans;
 
 //import vtrans.dynlib.VTransDynLibJNI.GuiCallBacks;
 
+import vtrans.dynlib.InitFunction;
+import vtrans.dynlib.VTransDynLibJNI;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -12,7 +14,7 @@ public class VTransBackground
 	implements Runnable
 {
 
-	private vtrans.dynlib.TranslateActivity.GuiCallBacks callback;
+	private vtrans.TranslateActivity.GuiCallBacks callback;
 	private Handler guiHandler;
 	private VTransDynLibJNI _vtransDynLibJNI;
 	private VTransApp _vtransApp;

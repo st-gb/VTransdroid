@@ -1,10 +1,11 @@
-package vtrans.dynlib;
+package vtrans;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import vtrans.dynlib.ApkUtil;
+import vtrans.ApkUtil;
+import vtrans.dynlib.VTransDynLibJNI;
 import android.app.Application;
 import android.os.Build;
 import android.os.Environment;

@@ -1,7 +1,8 @@
-package vtrans.dynlib;
+package vtrans;
 
 import android.util.Log;
-import vtrans.dynlib.TranslateActivity.GuiCallBacks;
+import vtrans.TranslateActivity.GuiCallBacks;
+import vtrans.dynlib.VTransDynLibJNI;
 
 public class ShowTranslationStatus implements Runnable {
 
