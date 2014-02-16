@@ -48,7 +48,11 @@ public class TranslatedTextDrawer
         _roundRectPaint.setColor(Color.parseColor("#aaaaaa") );
       }
       else
-        _roundRectPaint.setColor(Color.LTGRAY);
+        _roundRectPaint.setColor(/*Color.LTGRAY*/ 
+          //_canvas.get
+            //TODO use View's background color
+            Color.WHITE
+          );
       drawString(wagpn._strTranslation + " ", _canvas);
     }
     return s;
@@ -63,12 +67,17 @@ public class TranslatedTextDrawer
     {
       _currentY += //_lastWordTextBounds.bottom;
         _fullFontHeight;
-      Log.v("drawString", "new Y:" + _currentY);
+      Log.v(this.getClass().getName() + " drawString", "new Y:" + _currentY);
       _currentX = 0.0f;
     }
-    
-    RectF rect = new RectF(_currentX , _currentY, _lastWordTextBounds.right, 
-      _fontHeightFromBaseLine + _lastWordTextBounds.bottom);
+
+    final int rightEnd = (int) _currentX + _lastWordTextBounds.right;
+    final int bottom = (int) (_currentY + _fontHeightFromBaseLine) + 
+      _lastWordTextBounds.bottom;
+    RectF rect = new RectF(_currentX , _currentY, rightEnd, 
+//      _fontHeightFromBaseLine + _lastWordTextBounds.bottom
+      bottom
+      );
     
     canvas.drawRoundRect(rect, 4, 3, _roundRectPaint);
     
@@ -80,6 +89,11 @@ public class TranslatedTextDrawer
 
   @Override
   protected void processWord(String word) {
+    _roundRectPaint.setColor(/*Color.LTGRAY*/ 
+        //_canvas.get
+          //TODO use View's background color
+          Color.WHITE
+        );
     drawString(word, _canvas);
   }
 }

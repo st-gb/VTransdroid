@@ -35,12 +35,15 @@ public abstract class ITranslatedTextProcessor {
     _textPaint = textPaint;
     
     final String spaceChar = "_";
-    _textPaint.getTextBounds(spaceChar, 0, spaceChar.length(), _spaceCharTextBounds);
-    Log.v("onDraw", "space char text bounds:" + _spaceCharTextBounds.toString() );
+    _textPaint.getTextBounds(spaceChar, 0, spaceChar.length(), 
+      _spaceCharTextBounds);
+    Log.v("ITranslatedTextProcessor", "space char text bounds:" + 
+      _spaceCharTextBounds.toString() );
     
     final FontMetrics fontMetrics = _textPaint.getFontMetrics();
     _fontHeightFromBaseLine = getFontHeightFromBaseLine(fontMetrics);
     _fullFontHeight = getFullFontHeight(fontMetrics);
+    Log.v("ITranslatedTextProcessor", "full font height:" + _fullFontHeight );
     
 //    final FontMetrics fontMetrics = _textPaint.getFontMetrics();
 //    _fontHeightFromBaseLine = getFontHeightFromBaseLine(fontMetrics);
@@ -51,14 +54,16 @@ public abstract class ITranslatedTextProcessor {
   
   public static float getFontHeightFromBaseLine(final FontMetrics fontMetrics)
   {
-    Log.v("onDraw", "font ascent:" + fontMetrics.ascent);
+    Log.v(ITranslatedTextProcessor.class.getName() + " getFontHeightFromBaseLine", 
+      "font ascent:" + fontMetrics.ascent);
     final float fontHeightFromBaseLine = fontMetrics.ascent * -1.0f;
     return fontHeightFromBaseLine;
   }
   
   public static float getFullFontHeight(final FontMetrics fontMetrics)
   {
-    Log.v("onDraw", "font ascent:" + fontMetrics.ascent);
+    Log.v( ITranslatedTextProcessor.class.getName(), " getFullFontHeight " +
+  		"font ascent:" + fontMetrics.ascent);
     /**
      *  g  G    ascent: from baseLine (0.0, below "G" upwards)
      *          leading: from the upper circle of "g" downwards
@@ -69,34 +74,38 @@ public abstract class ITranslatedTextProcessor {
   
   public void process()
   {
-    Iterator<TranslationPossibilities> iterSerialTranslPoss = 
-      _translatedText.getVector().iterator();
-    while( iterSerialTranslPoss.hasNext() )
+    if( _translatedText != null )
     {
-      Log.v("onDraw", "iterSerialTranslPoss.hasNext()" );
-      TranslationPossibilities tps = iterSerialTranslPoss.next();
-      Vector<TranslationPossibility> tpVec = tps.getVector();
-      Log.v("onDraw", "tpVec.size():" + tpVec.size() );
-      /** More than 1 translation possibility */
-      if( tpVec.size() > 1 )
+      Iterator<TranslationPossibilities> iterSerialTranslPoss = 
+        _translatedText.getVector().iterator();
+      while( iterSerialTranslPoss.hasNext() )
       {
-        processWord("{");
-        Iterator<TranslationPossibility> translPossIter = tps.getVector().iterator();
-        TranslationPossibility tp = translPossIter.next();
-        addTranslations(tp);
-        while(translPossIter.hasNext() )
+        Log.v(this.getClass().getName(), "iterSerialTranslPoss.hasNext()" );
+        TranslationPossibilities tps = iterSerialTranslPoss.next();
+        Vector<TranslationPossibility> tpVec = tps.getVector();
+        Log.v(this.getClass().getName(), "tpVec.size():" + tpVec.size() );
+        /** More than 1 translation possibility */
+        if( tpVec.size() > 1 )
         {
-          processWord(";");
-          tp = translPossIter.next();
+          processWord("{");
+          Iterator<TranslationPossibility> translPossIter = tps.getVector().
+            iterator();
+          TranslationPossibility tp = translPossIter.next();
+          addTranslations(tp);
+          while(translPossIter.hasNext() )
+          {
+            processWord(";");
+            tp = translPossIter.next();
+            addTranslations(tp);
+          }
+          processWord("}");
+        }
+        else if(tpVec.size() > 0 )
+        {
+    //      Vector<WordAndGrammarPartName> translation = tpVec.elementAt(0);
+          TranslationPossibility tp = tpVec.elementAt(0);
           addTranslations(tp);
         }
-        processWord("}");
-      }
-      else if(tpVec.size() > 0 )
-      {
-  //      Vector<WordAndGrammarPartName> translation = tpVec.elementAt(0);
-        TranslationPossibility tp = tpVec.elementAt(0);
-        addTranslations(tp);
       }
     }
   }

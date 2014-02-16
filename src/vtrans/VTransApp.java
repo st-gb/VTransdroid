@@ -6,6 +6,8 @@ import java.util.Date;
 
 import vtrans.ApkUtil;
 import vtrans.dynlib.VTransDynLibJNI;
+import vtrans.dynlib.attributes.TranslatedText;
+import vtrans.view.ColouredTextView;
 import android.app.Application;
 import android.os.Build;
 import android.os.Environment;
@@ -25,6 +27,8 @@ public class VTransApp
 	//TODO
 	boolean testMode = true;
 	boolean _runningOnEmulator = true;
+  protected android.view.View _latestGermanTranslationView = null;
+  protected TranslatedText _translatedText;
 	
 	/** (non-Javadoc)
 	 * @see android.app.Application#onCreate()

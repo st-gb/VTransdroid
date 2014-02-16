@@ -25,6 +25,7 @@ public class OnTranslateButtonClickListener
 		this._vTransDynLibJNI = vTransDynLibJNI;
 		_translateActivity = translateActivity;
 		_guiCallBacks = translateActivity.callbacks;
+    Log.v(this.getClass().getName(), "OnTranslateButtonClickListener end");
 //		_textView = textView;
 	}
 	

@@ -4,8 +4,10 @@ import java.util.Date;
 
 import android.util.Log;
 import vtrans.TranslateActivity.GuiCallBacks;
+import vtrans.dynlib.HierarchicObjectsFromXMLgenerator;
 import vtrans.dynlib.SAX2serializer;
 import vtrans.dynlib.VTransDynLibJNI;
+import vtrans.dynlib.attributes.TranslatedText;
 
 /** Class that does the actual translation and GUI updates regarding 
  * translation. */
@@ -70,6 +72,7 @@ public class Translater
 	    
 			Log.v("Translater", "run after join");
   		String resultText = "";
+  		TranslatedText translatedText = null;
   		if( _vTransDynLibJNI._translationStopped )
   		{
   			resultText = "translation has been stopped";
@@ -77,7 +80,11 @@ public class Translater
   		else
   		{
   			//serialize XML data to vector of <word, grammar part>
-  			resultText = SAX2serializer.serializeXML(xml);
+//  			resultText = SAX2serializer.serializeXML(xml);
+		    final vtrans.dynlib.HierarchicObjectsFromXMLgenerator hierarchicObjectsFromXMLgenerator = new 
+		       HierarchicObjectsFromXMLgenerator(xml);
+		    translatedText = hierarchicObjectsFromXMLgenerator.
+		       generateTranslatedText();
   		}
   		/** http://stackoverflow.com/questions/4927856/how-to-calculate-time-difference-in-java */
   		long timeDiffInMs = timeAfterTranslation.getTime() - 
@@ -86,7 +93,9 @@ public class Translater
       //TODO update GUI synchronously but in GUI thread?
   		_guiCallBacks.setDuration( (timeDiffInMs / 1000) + "s," + 
 		    (timeDiffInMs % 1000) + "ms" );
-  		_guiCallBacks.setGermanText(resultText);
+//  		_guiCallBacks.setGermanText(resultText);
+      _guiCallBacks.setGermanTranslation(translatedText);
+  		
   		_guiCallBacks.setTranslateControlsState(true);
   		
     } catch (InterruptedException e) {

@@ -22,7 +22,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="vtrans.vtrans.SettingsActivity        android:label="@string/title_activity_settings" >
+            android:name="vtrans.SettingsActivity"
+            android:label="@string/title_activity_settings" >
         </activity>
     </application>
 

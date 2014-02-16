@@ -45,6 +45,21 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@id/germanLabel"
         android:inputType="textMultiLine" />
+    
+    <ScrollView 
+        android:id="@+id/colouredTextViewScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/germanLabel"
+      >
+     <vtrans.view.ColouredTextView
+       android:id="@+id/colouredTextView"
+       android:layout_width="fill_parent"
+       android:layout_height="fill_parent"
+       />
+    </ScrollView>
 
     <Button
         android:id="@+id/stop"

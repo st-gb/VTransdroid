@@ -6,6 +6,8 @@ import vtrans.dynlib.InitFunction;
 import vtrans.dynlib.R;
 import vtrans.dynlib.R.id;
 import vtrans.dynlib.R.layout;
+import vtrans.dynlib.attributes.TranslatedText;
+import vtrans.view.ColouredTextView;
 
 import java.io.IOException;
 
@@ -19,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,49 +42,89 @@ public class TranslateActivity
 	GuiCallBacks callbacks = new GuiCallBacks(this);
 	
 	EditText _germanText;
+  private ColouredTextView _colouredTextView;
+  private ScrollView _scrollView;
 	
-	/** @brief Called when the activity is first created. 
-	 *  Also, when changed from portrait to landscape mode*/
+  void assignControlsToMemberVariables()
+  {
+    /** from "Professional Android ...", "Chapter 4: Creating User Interfaces" 
+    *  "Creating Activity User Interfaces with Views" */
+    setContentView(R.layout.activity_main);
+    
+  //  _textView = /*new TextView(this);*/
+    _germanText = /*new TextView(this);*/ (EditText) findViewById(R.id.germanText);
+    
+    _colouredTextView = (ColouredTextView) findViewById(R.id.colouredTextView);
+    _scrollView = (ScrollView) findViewById(R.id.colouredTextViewScrollView);
+    
+//    Log.i("onCreate", "germanText:" + _germanText);
+    
+    _translateButton = /*new Button(this);*/ (Button) findViewById(R.id.translate);
+    _stopButton = /*new Button(this);*/ (Button) findViewById(R.id.stop);
+    _settingsButton = (Button) findViewById(R.id.settings);
+    _englishText = /*new EditText(this);*/ (EditText) findViewById(R.id.englishText);
+    //TODO set input language to English
+//    _englishText.setI
+    _duration = (TextView) findViewById(R.id.duration);
+  }
+  
+  /** Should be called after assigning controls from class "R" to member 
+   *  variables or after building GUI by hand. */
+  void setControlStatesAndListeners()
+  {
+    _stopButton.setEnabled(false);    
+    _translateButton.setEnabled(false);
+    _colouredTextView.setParentView(_scrollView);
+    _settingsButton.setOnClickListener(
+      new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+  //        setContentView(R.layout.settings);
+          /** from http://stackoverflow.com/questions/7991393/how-to-switch-between-screens */
+          Intent intent = new Intent(TranslateActivity.this, SettingsActivity.class);
+          startActivity(intent);
+        }
+      }
+//        new OnTranslateButtonClickListener(
+//            _vtransApp._vtransDynLibJNI, this)
+    );
+  }
+  
+	/** @brief Called when:
+	 *  -the activity is first created. 
+	 *  -changed from portrait to landscape mode and vice versa */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		Log.i("VTransDynLibJNI", "onCreate beg");
 	  super.onCreate(savedInstanceState);
-	  
-	  //from "Professional Android ...", "Chapter 4: Creating User Interfaces" 
-	  //  "Creating Activity User Interfaces with Views"
-		setContentView(R.layout.activity_main);
-		
-	//  _textView = /*new TextView(this);*/
-	  _germanText = /*new TextView(this);*/ (EditText) findViewById(R.id.germanText);
-	  Log.i("onCreate", "germanText:" + _germanText);
-	  _translateButton = /*new Button(this);*/ (Button) findViewById(R.id.translate);
-	  _stopButton = /*new Button(this);*/ (Button) findViewById(R.id.stop);
-		_stopButton.setEnabled(false);
-		_settingsButton = (Button) findViewById(R.id.settings);
-	  _englishText = /*new EditText(this);*/ (EditText) findViewById(R.id.englishText);
-	  _duration = (TextView) findViewById(R.id.duration);
-	  
-	  _translateButton.setEnabled(false);
-	  _settingsButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-//					setContentView(R.layout.settings);
-					//from http://stackoverflow.com/questions/7991393/how-to-switch-between-screens
-					Intent intent = new Intent(TranslateActivity.this, SettingsActivity.class);
-					startActivity(intent);
-				}
-		  });
+
+	  assignControlsToMemberVariables();
+	  setControlStatesAndListeners();
 	  
 	//    	Log.i("VTransDynLibJNI", "onCreate " + Context.getFilesDir().getPath() );
   	_vtransApp = (VTransApp) getApplication();
   	_vtransApp._apkUtil = new ApkUtil(_vtransApp, this.callbacks);
   	
   	_vtransApp.possiblyCopyAssetFilesIntoCacheDirInBG(callbacks);
-  	
+    
+    /** If text has been translated yet: show translation */
+    if( _vtransApp._translatedText != null)
+    {
+//      _germanText.setVisibility(View.INVISIBLE);
+//      _colouredTextView.setVisibility(View.VISIBLE);
+      setViewToColouredTextView(_vtransApp._translatedText);
+      //TODO
+      //BackgroundColorSpan android.text.style
+      //Oder Text.FromHTML()
+      //android.text.html
+    }
   	Log.i("VTransDynLibJNI", "onCreate end");
 	}
 	
+//  protected void onResume()
+//  {
+//  }
 	/**
 	 * 
 	 */
@@ -104,7 +147,7 @@ public class TranslateActivity
 	  ll.addView(_englishText, textLayoutParams);
 	  ll.addView(_translateButton, buttonLayoutParams);
 	  //ll.addView(_textView, textLayoutParams);
-	  ll.addView(_germanText, textLayoutParams);
+//	  ll.addView(_germanText, textLayoutParams);
 	  
 	  _translateButton.setText("translate");
 	}
@@ -136,6 +179,23 @@ public class TranslateActivity
 			}
 		});
 	}
+
+  void setViewToColouredTextView(final TranslatedText translatedText)
+  {
+    _germanText.setVisibility(View.INVISIBLE);
+    _colouredTextView.setVisibility(View.VISIBLE);
+    
+    final float textSize = _germanText.getTextSize();
+    
+    _colouredTextView.setMinimumHeight(_scrollView.getHeight() );
+    
+    /** Else the text may be too small to be readable. */
+    _colouredTextView.setTextSize(textSize);
+    _colouredTextView.setTranslatedText(translatedText);
+//    _colouredTextView.determineHeight();
+    _colouredTextView.requestLayout();
+    _colouredTextView.invalidate(); //force redraw
+  }
 	
 	/** @author Stefan Seide */
 	// calls to update gui elements from other threads
@@ -163,11 +223,29 @@ public class TranslateActivity
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
+          _germanText.setVisibility(View.VISIBLE);
+          _colouredTextView.setVisibility(View.INVISIBLE);
 					_germanText.setText( s );
 //					_et.setSelection(0, 1);
 //					_germanText.
 				}
 			});
+		}
+		
+		public void setGermanTranslation(final TranslatedText translatedText)
+		{
+      runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          
+          setViewToColouredTextView(translatedText);
+          
+          _vtransApp._latestGermanTranslationView = _colouredTextView;
+          _vtransApp._translatedText = translatedText;
+//          _et.setSelection(0, 1);
+//          _germanText.
+        }
+      });
 		}
 		
 		public void setEnglishText(final String edit) {
@@ -181,20 +259,24 @@ public class TranslateActivity
 
 		public void vtransIsReady(boolean b)
 		{
-			Log.d("GUIcallbacks", "vtransIsReady");
+			Log.d("GUIcallbacks", "vtransIsReady ready?:" + b);
 			runOnUiThread(new Runnable()
 			{
 				@Override
 				public void run()
 				{
+				  Log.v("vtransIsReady", "runOnUiThread run");
+				  /** Must be enabled before assigning a click listener? */
+          _translateButton.setEnabled(true);
 			    _translateButton.setOnClickListener(new OnTranslateButtonClickListener(
 		    		_vtransApp._vtransDynLibJNI, _translateActivity) );
 			    _stopButton.setOnClickListener(new OnStopButtonClickListener(
 			    		_vtransApp, TranslateActivity.this) );
-		      _translateButton.setEnabled(true);
 		      _stopButton.setEnabled(false);
+          Log.v("vtransIsReady", "runOnUiThread end");
 				}
 			});
+      Log.d("GUIcallbacks", "vtransIsReady end");
     }
 
 		public void setTranslateControlsState(final boolean enabled) {
@@ -242,6 +324,8 @@ public class TranslateActivity
 	{
 		Log.i("TranslateActivity", "onStop beg");  	
 		super.onStop();
+//    int h = _scrollView.getHeight();
+//    h = _englishText.getHeight();    
 		Log.i("TranslateActivity", "onStop end");  	
 	}
 
