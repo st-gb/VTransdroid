@@ -55,6 +55,8 @@ public class TranslateActivity
     _germanText = /*new TextView(this);*/ (EditText) findViewById(R.id.germanText);
     
     _colouredTextView = (ColouredTextView) findViewById(R.id.colouredTextView);
+    _colouredTextView.setApp(_vtransApp);
+    
     _scrollView = (ScrollView) findViewById(R.id.colouredTextViewScrollView);
     
 //    Log.i("onCreate", "germanText:" + _germanText);
@@ -99,11 +101,12 @@ public class TranslateActivity
 		Log.i("VTransDynLibJNI", "onCreate beg");
 	  super.onCreate(savedInstanceState);
 
+	  /** Must be assigned at first because reference is needed in following calls.*/
+    _vtransApp = (VTransApp) getApplication();
 	  assignControlsToMemberVariables();
 	  setControlStatesAndListeners();
 	  
 	//    	Log.i("VTransDynLibJNI", "onCreate " + Context.getFilesDir().getPath() );
-  	_vtransApp = (VTransApp) getApplication();
   	_vtransApp._apkUtil = new ApkUtil(_vtransApp, this.callbacks);
   	
   	_vtransApp.possiblyCopyAssetFilesIntoCacheDirInBG(callbacks);

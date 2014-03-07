@@ -2,6 +2,8 @@ package vtrans;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -15,19 +17,17 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 
 import java.util.List;
 
 import vtrans.dynlib.R;
-import vtrans.dynlib.R.id;
-import vtrans.dynlib.R.layout;
-import vtrans.dynlib.R.string;
-import vtrans.dynlib.R.xml;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -53,7 +53,9 @@ public class SettingsActivity
 	private static final boolean ALWAYS_SIMPLE_PREFS = false;
 	CheckBox _LogInTranslationEngineButton;
 	VTransApp _vtransApp;
-
+  private EditText _minimumTextHeightInPixelsEditText;
+  private EditText _maximumTextHeightInPixelsEditText;
+  
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -62,7 +64,11 @@ public class SettingsActivity
 	  
 	  _LogInTranslationEngineButton = (CheckBox) 
   		findViewById(R.id.logInTranslationEngine);
-	  	  
+	  _minimumTextHeightInPixelsEditText = (EditText)
+	    findViewById(R.id.mininumTextHeightInPixelsEditText);
+    _maximumTextHeightInPixelsEditText = (EditText)
+      findViewById(R.id.maximumTextHeightInPixelsEditText);
+	  
   	_vtransApp = (VTransApp) getApplication();
   	Log.v("SettingsActivity", "onCreate _vtransApp:" + _vtransApp );
 	  _LogInTranslationEngineButton.setChecked(
@@ -94,8 +100,31 @@ public class SettingsActivity
             }
 				}
 			});
+	  updateUIFromMemberVars();
 	}
 	
+	private void updateUIFromMemberVars() {
+	  _maximumTextHeightInPixelsEditText.setText(
+      Float.toString(_vtransApp._maximumTextHeightInPixelsEditText) );
+	  _minimumTextHeightInPixelsEditText.setText(
+      Float.toString(_vtransApp._minimumTextHeightInPixelsEditText) );
+	  }
+	
+	/** Called when the activity is going to be hidden. */
+	protected void onStop()
+	{
+	  super.onStop();
+	  storeUIcontrolValuesInMemberVars();
+	}
+
+	void storeUIcontrolValuesInMemberVars()
+	{
+    _vtransApp._minimumTextHeightInPixelsEditText = 
+        Float.valueOf(_minimumTextHeightInPixelsEditText.getText().toString() );
+    _vtransApp._maximumTextHeightInPixelsEditText = 
+      Float.valueOf(_maximumTextHeightInPixelsEditText.getText().toString() );	  
+	}
+		
 //	@Override
 //	protected void onPostCreate(Bundle savedInstanceState) {
 //		super.onPostCreate(savedInstanceState);

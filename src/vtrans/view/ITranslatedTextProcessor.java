@@ -6,7 +6,6 @@ import java.util.Vector;
 import vtrans.dynlib.attributes.TranslatedText;
 import vtrans.dynlib.attributes.TranslationPossibilities;
 import vtrans.dynlib.attributes.TranslationPossibility;
-import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Paint.FontMetrics;
@@ -24,12 +23,16 @@ public abstract class ITranslatedTextProcessor {
   protected Rect _spaceCharTextBounds = new Rect();
   protected float _fullFontHeight;
   Rect _lastWordTextBounds;
+//  protected VTransApp _vtransApp;
 
   ITranslatedTextProcessor(
     final TranslatedText translatedText, 
     Paint textPaint, 
-    int viewWidthInPixels)
+    int viewWidthInPixels//,
+//    VTransApp vtransApp
+    )
   {
+//    _vtransApp = vtransApp;
     _translatedText = translatedText;
     _currentViewWidth = viewWidthInPixels;
     _textPaint = textPaint;
@@ -64,10 +67,10 @@ public abstract class ITranslatedTextProcessor {
   {
     Log.v( ITranslatedTextProcessor.class.getName(), " getFullFontHeight " +
   		"font ascent:" + fontMetrics.ascent);
-    /**
-     *  g  G    ascent: from baseLine (0.0, below "G" upwards)
-     *          leading: from the upper circle of "g" downwards
-    */
+    /** see http://porcupineprogrammer.blogspot.de/2012/10/android-font-metrics-for-dummies.html
+     *  gGÖ    ascent: from baseLine (0.0, below "Ö" upwards to the dots)
+     *         leading: from the upper circle of "g" downwards
+               descent: from baseLine (.0.0, below "G") upwards */
     final float fullFontHeight = fontMetrics.ascent * -1.0f + fontMetrics.leading;
     return fullFontHeight;
   }

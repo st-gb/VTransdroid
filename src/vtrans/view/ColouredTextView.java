@@ -1,5 +1,6 @@
 package vtrans.view;
 
+import vtrans.VTransApp;
 import vtrans.dynlib.attributes.TranslatedText;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -25,7 +26,7 @@ public class ColouredTextView extends View {
   private int _currentWidth;
   float _fontHeightFromBaseLine;
   private ScaleGestureDetector _scaleDetector;
-//  private App _app;
+  private VTransApp _vtransApp = null;
   private int _widthMeasureSpec;
   private int _heightMeasureSpec;
   private int _minHeightInPixels = 0;
@@ -51,10 +52,10 @@ public class ColouredTextView extends View {
 		init();
 	}
 	
-//	public void setApp(App app)
-//	{
-//	  _app = app;
-//	}
+	public void setApp(VTransApp app)
+	{
+	  _vtransApp = app;
+	}
 	
 	protected void init()
 	{
@@ -74,8 +75,15 @@ public class ColouredTextView extends View {
       public boolean onScale(ScaleGestureDetector detector) {
         final float scaleFactor = detector.getScaleFactor();
         
-        float currentTextSize = _textPaint.getTextSize();
-        currentTextSize *= scaleFactor;
+        float currentTextSize = _textPaint.getTextSize();        
+        final float newTextSize = currentTextSize * scaleFactor;
+        
+        if( _vtransApp != null && 
+            _vtransApp.textHeightIsInRange(newTextSize)
+            )
+        {
+          currentTextSize = newTextSize;          
+        }
         
         Log.d("ColouredTextView.ScaleGestureDetector", "zoom ongoing, scale: " 
           + scaleFactor + " text size:" + currentTextSize);
@@ -107,6 +115,11 @@ public class ColouredTextView extends View {
 	
   public void setTextSize(final float textSize) {
     _textPaint.setTextSize(textSize);
+    if(_vtransApp._maximumTextHeightInPixelsEditText < textSize)
+    {
+      //else zooming is impossible due to range checks.
+      _vtransApp._maximumTextHeightInPixelsEditText = textSize;
+    }
     _fontHeightFromBaseLine = ITranslatedTextProcessor.getFontHeightFromBaseLine(
         _textPaint.getFontMetrics());
   }

@@ -18,6 +18,7 @@ public class TranslatedTextDrawer
 
   private Canvas _canvas;
   private Paint _roundRectPaint;
+  private boolean _wroteAtLeast1WordInLineYet = false;
 
   public TranslatedTextDrawer(
     final TranslatedText translatedText,
@@ -63,25 +64,34 @@ public class TranslatedTextDrawer
     _lastWordTextBounds = new Rect();
     _textPaint.getTextBounds(word, 0, word.length(), _lastWordTextBounds);
     
-    if( _currentX + _lastWordTextBounds.right > _currentViewWidth )
+    if( /** Prevent drawing a word 1 line lower if it does not fit into line*/
+        _wroteAtLeast1WordInLineYet && 
+        _currentX + _lastWordTextBounds.right > _currentViewWidth )
     {
-      _currentY += //_lastWordTextBounds.bottom;
+      _currentY += _lastWordTextBounds.bottom +
         _fullFontHeight;
       Log.v(this.getClass().getName() + " drawString", "new Y:" + _currentY);
       _currentX = 0.0f;
+      _wroteAtLeast1WordInLineYet = false;
     }
 
     final int rightEnd = (int) _currentX + _lastWordTextBounds.right;
-    final int bottom = (int) (_currentY + _fontHeightFromBaseLine) + 
+    final int bottom = (int) (_currentY + /*_fontHeightFromBaseLine*/
+      _fullFontHeight) + 
       _lastWordTextBounds.bottom;
-    RectF rect = new RectF(_currentX , _currentY, rightEnd, 
+    RectF rect = new RectF(_currentX , _currentY 
+      //TODO possibly start a little bit below (->add pixels)
+      //  + 
+      , rightEnd, 
 //      _fontHeightFromBaseLine + _lastWordTextBounds.bottom
       bottom
       );
     
     canvas.drawRoundRect(rect, 4, 3, _roundRectPaint);
     
-    canvas.drawText(word, _currentX, _fontHeightFromBaseLine + _currentY, _textPaint);
+    canvas.drawText(word, _currentX, //_fontHeightFromBaseLine + _currentY
+      _currentY + _fullFontHeight , _textPaint);
+    _wroteAtLeast1WordInLineYet = true;
     
     _currentX += _lastWordTextBounds.right + _spaceCharTextBounds.right;
 //    canvas.s
@@ -91,9 +101,9 @@ public class TranslatedTextDrawer
   protected void processWord(String word) {
     _roundRectPaint.setColor(/*Color.LTGRAY*/ 
         //_canvas.get
-          //TODO use View's background color
-          Color.WHITE
-        );
+        //TODO use View's background color
+        Color.WHITE
+      );
     drawString(word, _canvas);
   }
 }

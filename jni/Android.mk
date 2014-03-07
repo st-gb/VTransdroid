@@ -13,6 +13,7 @@
 # limitations under the License.
 #
 LOCAL_PATH := $(call my-dir)
+#print $(LOCAL_PATH)
 
 #include $(CLEAR_VARS)
 #LOCAL_MODULE    := MiniXML 
@@ -25,8 +26,14 @@ include $(CLEAR_VARS)
 include $(CLEAR_VARS)  #/cygdrive/c/devel/android-ndk-r9b-windows-x86/android-ndk-r9b/platforms/android-14/arch-arm/usr/include
 include $(LOCAL_PATH)/source_files.mk
 include $(LOCAL_PATH)/static_libs.mk
+
+
 include $(LOCAL_PATH)/common_sourcecode_source_files.mk
+#include $(LOCAL_PATH)/../../common_sourcecode/VTransdroid_source_files.mk
 include $(LOCAL_PATH)/VTrans3_source_files.mk
+#see http://stackoverflow.com/questions/12551951/ndk-build-library-outside-main-project-source-tree
+# Must be an absolute path if outside of dir of THIS makefile?!
+#include $(LOCAL_PATH)/../../VTrans3\VTransdroid_source_files.mk
 include $(LOCAL_PATH)/MiniXML_source_files.mk
 
 LOCAL_CFLAGS = -IT:/SourceCodeManagement/VTrans3/ \
@@ -56,7 +63,8 @@ LOCAL_MODULE    := VTrans
 
 #LOCAL_SRC_FILES := Attributes\GermanWord.cpp \
                    hello-jni.c
-LOCAL_SRC_FILES := hello-jni.cpp $(MINI_XML_LIB_SOURCE_FILES) \
+#hello-jni.cpp 
+LOCAL_SRC_FILES := $(MINI_XML_LIB_SOURCE_FILES) \
  $(VTRANS3_SOURCE_FILES.MK_SOURCE_FILES) \
  $(COMMON_SOURCECODE_SOURCE_FILES.MK_SOURCE_FILES)
 

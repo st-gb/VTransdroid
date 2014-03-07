@@ -37,8 +37,8 @@ public class TranslatedTextHeightCalculator
       _currentX = 0.0f;
     }
     
-    RectF rect = new RectF(_currentX , _currentY, _lastWordTextBounds.right, 
-      _fontHeightFromBaseLine + _lastWordTextBounds.bottom);
+//    RectF rect = new RectF(_currentX , _currentY, _lastWordTextBounds.right, 
+//      _fontHeightFromBaseLine + _lastWordTextBounds.bottom);
         
     _currentX += _lastWordTextBounds.right + _spaceCharTextBounds.right;
   }
