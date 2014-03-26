@@ -31,6 +31,7 @@ VTRANS3_SOURCE_FILES.MK_SOURCE_FILES := \
 	$(VTRANS3_ROOT_PATH)/IO/UnknownGrammarPartNameException.cpp\
 	$(VTRANS3_ROOT_PATH)/Parse/DirectingLeavesInSingleIterationTraverser.cpp\
 	$(VTRANS3_ROOT_PATH)/Parse/DirectingLeavesMultipleIterTraverser.cpp\
+	$(VTRANS3_ROOT_PATH)/Parse/DuplicateParseTree.cpp\
 	$(VTRANS3_ROOT_PATH)/Parse/GrammarPart.cpp\
 	$(VTRANS3_ROOT_PATH)/Parse/KeepTrackOfCurrentParseTreePath.cpp\
 	$(VTRANS3_ROOT_PATH)/Parse/ParseByRise.cpp\

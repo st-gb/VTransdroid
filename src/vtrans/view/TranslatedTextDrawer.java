@@ -28,9 +28,39 @@ public class TranslatedTextDrawer
     )
   {
     super(translatedText, textPaint, viewWidthInPixels);
+    _canvas = canvas;
+    init();
+  }
+  
+  public TranslatedTextDrawer() {
+    super(null, null, 0);
+    init();
+  }
+
+  private void init()
+  {
     _roundRectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     _roundRectPaint.setStyle(Paint.Style.FILL);
-    _canvas = canvas;
+  }
+  
+  protected void process(WordAndGrammarPartName wagpn)
+  {
+    if( wagpn._strGrammarPartName.equals("UnknownWord") )
+    {
+      _roundRectPaint.setColor(Color./*rgb(0, 0, 128)*/
+          parseColor("#a0a0ff") );
+    }
+    else if( wagpn._strGrammarPartName.equals("singular_noun") )
+    {
+      _roundRectPaint.setColor(Color.parseColor("#aaaaaa") );
+    }
+    else
+      _roundRectPaint.setColor(/*Color.LTGRAY*/ 
+        //_canvas.get
+          //TODO use View's background color
+          Color.WHITE
+        );
+    drawString(wagpn._strTranslation + " ", _canvas);
   }
   
   protected String addTranslations(final TranslationPossibility tp) {
@@ -39,22 +69,7 @@ public class TranslatedTextDrawer
     while( iterWords.hasNext() )
     {
       WordAndGrammarPartName wagpn = iterWords.next();
-      if( wagpn._strGrammarPartName.equals("UnknownWord") )
-      {
-        _roundRectPaint.setColor(Color./*rgb(0, 0, 128)*/
-            parseColor("#a0a0ff") );
-      }
-      else if( wagpn._strGrammarPartName.equals("singular_noun") )
-      {
-        _roundRectPaint.setColor(Color.parseColor("#aaaaaa") );
-      }
-      else
-        _roundRectPaint.setColor(/*Color.LTGRAY*/ 
-          //_canvas.get
-            //TODO use View's background color
-            Color.WHITE
-          );
-      drawString(wagpn._strTranslation + " ", _canvas);
+      process(wagpn);
     }
     return s;
   }
@@ -68,7 +83,7 @@ public class TranslatedTextDrawer
         _wroteAtLeast1WordInLineYet && 
         _currentX + _lastWordTextBounds.right > _currentViewWidth )
     {
-      _currentY += _lastWordTextBounds.bottom +
+      _currentY += //_lastWordTextBounds.bottom +
         _fullFontHeight;
       Log.v(this.getClass().getName() + " drawString", "new Y:" + _currentY);
       _currentX = 0.0f;
@@ -77,8 +92,8 @@ public class TranslatedTextDrawer
 
     final int rightEnd = (int) _currentX + _lastWordTextBounds.right;
     final int bottom = (int) (_currentY + /*_fontHeightFromBaseLine*/
-      _fullFontHeight) + 
-      _lastWordTextBounds.bottom;
+      _fullFontHeight) /*+ 
+      _lastWordTextBounds.bottom*/;
     RectF rect = new RectF(_currentX , _currentY 
       //TODO possibly start a little bit below (->add pixels)
       //  + 
@@ -87,10 +102,12 @@ public class TranslatedTextDrawer
       bottom
       );
     
-    canvas.drawRoundRect(rect, 4, 3, _roundRectPaint);
+    final float roundEdgeRadius = _fullFontHeight / 10.0f;
+    canvas.drawRoundRect(rect, /*_lastWordTextBounds.right / 10*/
+        roundEdgeRadius, roundEdgeRadius, _roundRectPaint);
     
     canvas.drawText(word, _currentX, //_fontHeightFromBaseLine + _currentY
-      _currentY + _fullFontHeight , _textPaint);
+      _currentY + /*_fullFontHeight*/ _fontHeightFromBaseLine , _textPaint);
     _wroteAtLeast1WordInLineYet = true;
     
     _currentX += _lastWordTextBounds.right + _spaceCharTextBounds.right;
@@ -105,5 +122,9 @@ public class TranslatedTextDrawer
         Color.WHITE
       );
     drawString(word, _canvas);
+  }
+
+  public void set(final Canvas canvas) {
+    _canvas = canvas;
   }
 }

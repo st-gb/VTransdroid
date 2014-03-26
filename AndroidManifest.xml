@@ -7,9 +7,12 @@
     <uses-sdk android:minSdkVersion="9" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     
+    <!-- developer.android.com/tools/device.html:
+      "your published application should usually not be debuggable" 
+      'android:debuggable="true"'
+      -->
     <application
         android:name="vtrans.VTransApp"
-        android:debuggable="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity

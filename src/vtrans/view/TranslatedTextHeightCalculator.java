@@ -23,8 +23,12 @@ public class TranslatedTextHeightCalculator
     super(translatedText, textPaint, viewWidthInPixels);
   }
   
+  public TranslatedTextHeightCalculator() {
+    super(null, null, 0);
+  }
+
   @Override
-  protected void processWord(String word)
+  protected void processWord(final String word)
   {
     _lastWordTextBounds = new Rect();
     _textPaint.getTextBounds(word, 0, word.length(), _lastWordTextBounds);
@@ -58,6 +62,11 @@ public class TranslatedTextHeightCalculator
   public int getCalculatedHeight() {
     final float calculatedHeight = _currentY + _fullFontHeight;
     return (int) (calculatedHeight);
+  }
+
+  @Override
+  protected void process(WordAndGrammarPartName wordAndGrammarPartName) {
+    processWord(wordAndGrammarPartName._strTranslation);
   }
 
 }

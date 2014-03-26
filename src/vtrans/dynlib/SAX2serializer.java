@@ -2,7 +2,10 @@ package vtrans.dynlib;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +39,33 @@ public class SAX2serializer
     return s;
   }
 
+  public static SerialMinimalTranslPossDiff serializeTranslationPossibilities(
+    final TranslatedText translatedText)
+  {
+    SerialMinimalTranslPossDiff serialMinimalTranslPossDiff = new //Vector<MinimalTranslPossDiff>();
+      SerialMinimalTranslPossDiff();
+    Iterator<TranslationPossibilities> iterSerialTranslPoss = 
+        translatedText.getVector().iterator();
+      while( iterSerialTranslPoss.hasNext() )
+      {
+        /** "e.g. for text "the car the cats":
+         *   "the car" */
+        TranslationPossibilities tps = iterSerialTranslPoss.next();
+        /** e.g. German translation poss. for "the car": "das Auto", "der Fahrkorb" */
+//        Vector<TranslationPossibility> tpVec = tps.getVector();
+//        if( tpVec.size() > 1 )
+        {
+          final Vector<TranslationPossibility> translationPossibilityVector = 
+            tps.get_translationPossibilities();
+          MinimalTranslPossDiff minDiff = new MinimalTranslPossDiff(
+            translationPossibilityVector);
+          minDiff.create();
+          serialMinimalTranslPossDiff.addElement(minDiff);
+        }
+      }
+    return serialMinimalTranslPossDiff;
+  }
+  
   public static String serializeXML(final String xmlData)
   {
     //XMLReader 
@@ -54,21 +84,27 @@ public class SAX2serializer
       translatedText.getVector().iterator();
     while( iterSerialTranslPoss.hasNext() )
     {
+      /** "e.g. for text "the car the cats":
+       *   "the car" */
       TranslationPossibilities tps = iterSerialTranslPoss.next();
+      /** e.g. German translation poss. for "the car": "das Auto", "der Fahrkorb" */
       Vector<TranslationPossibility> tpVec = tps.getVector();
       if( tpVec.size() > 1 )
       {
-        s += "{";
-        Iterator<TranslationPossibility> translPossIter = tps.getVector().iterator();
-        TranslationPossibility tp = translPossIter.next();
-        s += addTranslations(tp);
-        while(translPossIter.hasNext() )
-        {
-          s += ";";
-          tp = translPossIter.next();
-          s += addTranslations(tp);
-        }
-        s += "}";
+//        s += "{";
+//        Iterator<TranslationPossibility> translPossIter = tps.getVector().iterator();
+//        TranslationPossibility tp = translPossIter.next();
+//        s += addTranslations(tp);
+//        while(translPossIter.hasNext() )
+//        {
+//          s += ";";
+//          tp = translPossIter.next();
+//          s += addTranslations(tp);
+//        }
+//        s += "}";
+        
+        MinimalTranslPossDiff minDiff = minimizeToDifferences(tpVec);
+        
       }
       else if(tpVec.size() > 0 )
       {
@@ -78,5 +114,16 @@ public class SAX2serializer
       }
     }
   return s;
+  }
+
+  /** @param tpVec: e.g. German translation poss. for "the car": "das Auto", 
+   *   "der Fahrkorb" */
+  private static MinimalTranslPossDiff minimizeToDifferences(
+    final Vector<TranslationPossibility> tpVec)
+  {
+//    Vector<>
+    MinimalTranslPossDiff mindiff = new MinimalTranslPossDiff(tpVec);
+    mindiff.create();
+    return mindiff;
   }
 }

@@ -151,8 +151,9 @@ public class HierarchicObjectsFromXMLgenerator
         String strTranslation = attributes.getValue("translation");
   //      _vector.addElement(new WordAndGrammarPartName(strTranslation, 
   //        strGrammarPartName) );
+        final String concatenation_ID = attributes.getValue("concatenation_ID");
         _translationPossibility.add(new WordAndGrammarPartName(
-          strTranslation, strGrammarPartName) );
+          strTranslation, strGrammarPartName, concatenation_ID) );
       }
     }
     else

@@ -170,6 +170,9 @@ public class ApkUtil
 //  	BufferedReader r;
 		int i;
 		_bytesCopied = 0;
+		//TODO test if file size equals return value of "skip"
+//		final long numBytesSkipped = bis.skip(Long.MAX_VALUE);
+//		Log.v("copy file", "numBytesSkipped: " + numBytesSkipped);
 		do
 		{
 			i = bis.read();

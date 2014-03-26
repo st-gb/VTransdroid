@@ -100,9 +100,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>VTrans3</name>
+			<name>common_sourcecode</name>
 			<type>2</type>
-			<location>T:/SourceCodeManagement/VTrans3</location>
+			<location>T:/SourceCodeManagement/common_sourcecode</location>
 		</link>
 	</linkedResources>
 </projectDescription>

@@ -2,12 +2,14 @@ package vtrans.view;
 
 import vtrans.VTransApp;
 import vtrans.dynlib.attributes.TranslatedText;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -17,8 +19,9 @@ import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-public class ColouredTextView extends View {
-
+public class ColouredTextView extends View 
+  implements View.OnTouchListener
+{
 	private Paint _textPaint;
 	private String m_xmlData;
   private TranslatedText _translatedText;
@@ -33,7 +36,11 @@ public class ColouredTextView extends View {
   /** To determine the height of the parent->determine max. height of _this_
    *  View */
   private View _parentView;
-	
+  private TranslatedTextDrawer _translatedTextDrawer = new 
+    TranslatedTextDrawer();
+  private TranslatedTextHeightCalculator _translatedTextHeightCalculator = new 
+    TranslatedTextHeightCalculator();
+  
 	public ColouredTextView(Context context) {
 	  super(context);
 	  init();
@@ -57,50 +64,60 @@ public class ColouredTextView extends View {
 	  _vtransApp = app;
 	}
 	
+	@TargetApi(Build.VERSION_CODES.FROYO)
+  private void addScaleGestureDetector()
+	{
+    //http://stackoverflow.com/questions/5375817/android-pinch-zoom
+    _scaleDetector = new ScaleGestureDetector(getContext(), 
+      new OnScaleGestureListener()
+      {
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+        }
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            return true;
+        }
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+          final float scaleFactor = detector.getScaleFactor();
+          
+          float currentTextSize = _textPaint.getTextSize();        
+          final float newTextSize = currentTextSize * scaleFactor;
+          
+          if( _vtransApp != null && 
+              _vtransApp.textHeightIsInRange(newTextSize)
+              )
+          {
+            currentTextSize = newTextSize;          
+          }
+          
+          Log.d("ColouredTextView.ScaleGestureDetector", "zoom ongoing, scale: " 
+            + scaleFactor + " text size:" + currentTextSize);
+          
+          if( scaleFactor != 1.0f )
+          {
+            setTextSize(currentTextSize);
+  //          _app._textSize = currentTextSize;
+            determineHeight();
+  //          measure(_widthMeasureSpec, _heightMeasureSpec);
+            //http://stackoverflow.com/questions/6946478/what-triggers-a-views-measure-to-be-called
+            requestLayout();
+            invalidate(); //force redraw
+          }
+          return false;
+        }
+      });
+	}
+	
 	protected void init()
 	{
 //	  _app = (App) getContext().getApplicationContext().getApplication();
 	  /** If not set then the background color e.g. may be black. */
 	  setBackgroundColor(Color.WHITE);
-    //http://stackoverflow.com/questions/5375817/android-pinch-zoom
-    _scaleDetector = new ScaleGestureDetector(getContext(), new OnScaleGestureListener() {
-      @Override
-      public void onScaleEnd(ScaleGestureDetector detector) {
-      }
-      @Override
-      public boolean onScaleBegin(ScaleGestureDetector detector) {
-          return true;
-      }
-      @Override
-      public boolean onScale(ScaleGestureDetector detector) {
-        final float scaleFactor = detector.getScaleFactor();
-        
-        float currentTextSize = _textPaint.getTextSize();        
-        final float newTextSize = currentTextSize * scaleFactor;
-        
-        if( _vtransApp != null && 
-            _vtransApp.textHeightIsInRange(newTextSize)
-            )
-        {
-          currentTextSize = newTextSize;          
-        }
-        
-        Log.d("ColouredTextView.ScaleGestureDetector", "zoom ongoing, scale: " 
-          + scaleFactor + " text size:" + currentTextSize);
-        
-        if( scaleFactor != 1.0f )
-        {
-          setTextSize(currentTextSize);
-//          _app._textSize = currentTextSize;
-          determineHeight();
-//          measure(_widthMeasureSpec, _heightMeasureSpec);
-          //http://stackoverflow.com/questions/6946478/what-triggers-a-views-measure-to-be-called
-          requestLayout();
-          invalidate(); //force redraw
-        }
-        return false;
-      }
-  });
+	  
+	  addScaleGestureDetector();
+	  
 		_textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 //		setTextSize(_app._textSize);
 //		_textPaint.setTextAlign(Align.);
@@ -143,9 +160,12 @@ public class ColouredTextView extends View {
 //		canvas.drawRoundRect(rect, 4, 3, _roundRectPaint);
 //		
 //		canvas.drawText(word, 0, fontHeightFromBaseLine, _textPaint);
-		TranslatedTextDrawer translatedTextDrawer = new TranslatedTextDrawer(
-	    _translatedText, _textPaint, canvas, _currentWidth);
-		translatedTextDrawer.process();
+//		TranslatedTextDrawer translatedTextDrawer = new TranslatedTextDrawer(
+//	    _translatedText, _textPaint, canvas, _currentWidth);
+		_translatedTextDrawer.set(_textPaint);
+		_translatedTextDrawer.set(canvas);
+		_translatedTextDrawer.setWidthInPixels(_currentWidth);
+		_translatedTextDrawer.process();
 		
 //	  _translateButton.setText("translate");
 		//http://stackoverflow.com/questions/6535648/how-can-i-dynamically-set-the-position-of-view-in-android
@@ -248,11 +268,15 @@ public class ColouredTextView extends View {
 	{
 	  if( _translatedText != null )
     {
-  	  TranslatedTextHeightCalculator translatedTextHeightCalculator = new 
-        TranslatedTextHeightCalculator(_translatedText, _textPaint, 
-        _currentWidth);
-  	  translatedTextHeightCalculator.process();
-  	  int heightInPixels = translatedTextHeightCalculator.getCalculatedHeight();
+//  	  TranslatedTextHeightCalculator translatedTextHeightCalculator = new 
+//        TranslatedTextHeightCalculator(_translatedText, _textPaint, 
+//        _currentWidth);
+	    _translatedTextHeightCalculator.set(_textPaint);
+	    _translatedTextHeightCalculator.setWidthInPixels(_currentWidth);
+	    
+//	    _translatedTextHeightCalculator.set(_translatedText);
+  	  _translatedTextHeightCalculator.process();
+  	  int heightInPixels = _translatedTextHeightCalculator.getCalculatedHeight();
       if(_parentView != null )
       {
         final int parentViewHeigthInPixels = _parentView.getHeight();
@@ -268,8 +292,14 @@ public class ColouredTextView extends View {
 	  m_xmlData = string;	  
   }
 
-  public void setTranslatedText(vtrans.dynlib.attributes.TranslatedText translatedText) {
+  public void setTranslatedText(
+    vtrans.dynlib.attributes.TranslatedText translatedText) {
     _translatedText = translatedText;
+    
+    _translatedTextHeightCalculator.set(translatedText);
+    _translatedTextDrawer._wordAndGrammarPartNameVector = 
+      _translatedTextHeightCalculator._wordAndGrammarPartNameVector;
+//    set(translatedText);
   }
   
   void buildGUI()
@@ -290,6 +320,13 @@ public class ColouredTextView extends View {
 //  ll.addView(_translateButton, buttonLayoutParams);
 //  //ll.addView(_textView, textLayoutParams);
 //  ll.addView(_germanText, textLayoutParams);
+  }
+
+  @Override
+  public boolean onTouch(View v, MotionEvent event) {
+    // TODO Auto-generated method stub
+    float x = event.getX();
+    return false;
   }
 }
 

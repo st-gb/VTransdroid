@@ -51,15 +51,49 @@ public class VTransApp
   private float _initialMinimumTextHeightInPixels;
   private float _initialMaximumTextHeightInPixels;
 
-  //from http://stackoverflow.com/questions/5755460/how-to-change-the-default-language-of-android-emulator
-  void setGermanLocale()
+  /** from http://stackoverflow.com/questions/5755460/how-to-change-the-default-language-of-android-emulator 
+   *  @see WARNING: also changes the dictionary/ word suggestions while text 
+   *  input? so that if user */
+  void setLocale(final String localeName)
   {
     Locale locale = null;
     Configuration config=null;
      config = getBaseContext().getResources().getConfiguration();
-    locale = new Locale("de");
+    locale = new Locale(localeName);
     Locale.setDefault(locale);
     config.locale = locale;
+  }
+  
+  void setGermanLocale()
+  {
+    setLocale("de");
+  }
+  
+  private void setRootDirPath()
+  {
+    ////http://stackoverflow.com/questions/2799097/how-can-i-detect-when-an-android-application-is-running-in-the-emulator
+    //_runningOnEmulator = "goldfish".equals(Build.HARDWARE);
+    ////if( isEmulator)
+    ////  testMode = false;
+    //
+    ////TODO check if currently debugging: if yes: set _rootDirectoryPath to 
+    //// external storage (for extracting files)
+    //if( /*testMode*/ ! _runningOnEmulator )
+    //{
+    //  //from http://stackoverflow.com/questions/1490869/how-to-get-vm-arguments-from-inside-of-java-application
+    //  String testModeValue = System.getProperty("testMode");
+    //  /** from
+    //   * http://stackoverflow.com/questions/3551821/android-write-to-sd-card-folder
+    //   */
+    //  _rootDirectoryPath = Environment.getExternalStorageDirectory() + File.separator + 
+    //    //TODO use "app_name" string 
+    //    "VTrans";
+    ///** needs 
+    // * uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /
+    // */     
+    //}
+    //else
+      _rootDirectoryPath = getCacheDir().toString();
   }
   
 	/** (non-Javadoc)
@@ -75,32 +109,11 @@ public class VTransApp
     /** Step 6*/
     _sharedPrefs = getSharedPreferences(USER_PREFERENCE, Activity.MODE_PRIVATE);
     storePreferencesIntoMemberVars();
-		setGermanLocale();
-		//http://stackoverflow.com/questions/2799097/how-can-i-detect-when-an-android-application-is-running-in-the-emulator
-		_runningOnEmulator = "goldfish".equals(Build.HARDWARE);
-//		if( isEmulator)
-//			testMode = false;
-		//TODO check if currently debugging: if yes: set _rootDirectoryPath to 
-		// external storage (for extracting files)
-		if( /*testMode*/ ! _runningOnEmulator )
-		{
-			//from http://stackoverflow.com/questions/1490869/how-to-get-vm-arguments-from-inside-of-java-application
-			String testModeValue = System.getProperty("testMode");
-			/** from
-			 * http://stackoverflow.com/questions/3551821/android-write-to-sd-card-folder
-			 */
-			_rootDirectoryPath = Environment.getExternalStorageDirectory() + File.separator + 
-				//TODO use "app_name" string 
-				"VTrans";
-		/** needs 
-		 * uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /
-		 */			
-		}
-		else
-			_rootDirectoryPath = getCacheDir().toString();
+//		setGermanLocale();
+		
+    setRootDirPath();
 		Log.i("VTransApp onCreate", "using root dir: " + _rootDirectoryPath);
 		_vtransDynLibJNI.setPathes(_rootDirectoryPath);
-		
   }
 	
   /** "Professional Android Application Development (Wrox Programmer to Programmer)"

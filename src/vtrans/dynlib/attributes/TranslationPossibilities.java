@@ -7,6 +7,10 @@ public class TranslationPossibilities
   Vector<TranslationPossibility> _translationPossibilities = new 
       Vector<TranslationPossibility>();
 
+  public Vector<TranslationPossibility> get_translationPossibilities() {
+    return _translationPossibilities;
+  }
+
   public void add(TranslationPossibility translationPossibility) {
     _translationPossibilities.addElement(translationPossibility);   
   }
