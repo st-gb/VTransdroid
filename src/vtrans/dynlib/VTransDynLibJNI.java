@@ -140,6 +140,7 @@ public class VTransDynLibJNI
   	try{
       _translationStopped = false;
   		xml = Translate(englishText);
+  		Log.v("translations as XML:", xml);
   	}catch(Throwable t)
   	{
   		t.printStackTrace();

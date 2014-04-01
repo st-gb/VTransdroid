@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class ApkUtil
 {
   final static int CHARACTER_NOT_FOUND = -1;
   final static int END_OF_STREAM = -1;
+  private static final int FILE_BUFFER_SIZE = 1024;
   
 	private VTransApp _vtransApp;
 	protected AssetManager _assetManager;
@@ -142,6 +144,44 @@ public class ApkUtil
 	  Log.i("VTransDynLibJNI", "createDirectory dir exists?" + configDir.exists() );
   }
 
+  private void copyFileViaSelfBufferedInputStream(final InputStream is,
+    final File file) throws IOException
+  {
+    final byte [] buffer = new byte[FILE_BUFFER_SIZE];
+//    final FileInputStream fis = new FileInputStream(is);
+    FileOutputStream fos = new FileOutputStream(file);
+    int numBytesRead;
+    do
+    {
+      numBytesRead = is.read(buffer);
+      _bytesCopied += numBytesRead;
+      fos.write(buffer);
+    }while( numBytesRead == FILE_BUFFER_SIZE );
+    fos.close();
+    is.close();
+  }
+  
+  private void copyFileViaBufferedInputStream(final InputStream is, 
+      final File file) throws IOException
+  {
+    BufferedInputStream bis = new BufferedInputStream(is);
+    FileOutputStream fos = new FileOutputStream(file);
+    BufferedOutputStream bos = new BufferedOutputStream(fos);
+//    BufferedReader r;
+    int i;
+    //TODO test if file size equals return value of "skip"
+//    final long numBytesSkipped = bis.skip(Long.MAX_VALUE);
+//    Log.v("copy file", "numBytesSkipped: " + numBytesSkipped);
+    do
+    {
+      i = bis.read();
+      ++ _bytesCopied;
+      bos.write(i);
+    }while( i != END_OF_STREAM );
+    bis.close();
+    bos.close();
+  }
+  
   /** Copies a single file from the archive's asset folder to a file system 
    *  path. */
   private void extractFile(final String filePath )
@@ -149,7 +189,7 @@ public class ApkUtil
   {
   	Log.i("VTransDynLibJNI", "extractFile: \"" + filePath + "\" from assets" );
   	_guiCB.setStatusText("extracting " + filePath);
-  	
+  	  	
 		InputStream is = _assetManager.open(//"configuration/VTrans_main_config.xml"
 			filePath);
 		
@@ -159,28 +199,21 @@ public class ApkUtil
 //  	AssetFileDescriptor fd = _assetManager.openNonAssetFd(filePath);
 //  	_fileSizeInBytes = fd.getLength();
   	
-  	BufferedInputStream bis = new BufferedInputStream(is);
 		//TODO get file size in order to show a progress bar
 		final String outputFilePath = _vtransApp._rootDirectoryPath + File.separator + filePath;
   	File file = new File(//mainConfigFilePath
 			outputFilePath);
   	Log.i("VTransDynLibJNI", "outputFilePath:" + outputFilePath);
-  	FileOutputStream fos = new FileOutputStream(file);
-  	BufferedOutputStream bos = new BufferedOutputStream(fos);
-//  	BufferedReader r;
-		int i;
-		_bytesCopied = 0;
-		//TODO test if file size equals return value of "skip"
-//		final long numBytesSkipped = bis.skip(Long.MAX_VALUE);
-//		Log.v("copy file", "numBytesSkipped: " + numBytesSkipped);
-		do
-		{
-			i = bis.read();
-			++ _bytesCopied;
-			bos.write(i);
-		}while( i != END_OF_STREAM );
-		bis.close();
-		bos.close();
+    _bytesCopied = 0;
+    /** See http://nadeausoftware.com/articles/2008/02/java_tip_how_read_files_quickly#Benchmarks 
+     *  See http://stackoverflow.com/questions/5854859/faster-way-to-read-file
+     *  : "Mapped byte buffers is the fastest way"
+     * See http://www.javaworld.com/article/2076241/build-ci-sdlc/tweak-your-io-performance-for-faster-runtime.html:
+     *  fastest is "Read data 1 K at a time, using FileInputStream.read(byte[]), 
+     *  and access the data from the buffer" */
+    copyFileViaSelfBufferedInputStream(is, file);
+//    copyFileViaBufferedInputStream(is, file);
+    
 		file.setExecutable(true, false);
 		file.setReadable(true, false);
 		Log.v("VTransDynLibJNI", "file size: " + file.length() );	  
