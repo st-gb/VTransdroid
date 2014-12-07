@@ -3,6 +3,7 @@ package vtrans.dynlib.attributes;
 import java.util.Iterator;
 import java.util.Vector;
 
+/** */
 public class TranslationPossibility
 {
   Vector<WordAndGrammarPartName> _words = new Vector<WordAndGrammarPartName>();

@@ -172,9 +172,9 @@ public class VTransDynLibJNI
    * installation time by the package manager. */
   public static void loadDynLib(final String dynLibPathWoutExtension)
   {
-  	Log.i("VTransDynLibJNI", "static beg");
+  	Log.i("VTransDynLibJNI", "loadDynLib begin");
       System.loadLibrary(dynLibPathWoutExtension);
-    Log.i("VTransDynLibJNI", "static end");
+    Log.i("VTransDynLibJNI", "loadDynLib end");
   }
   
   public boolean initFunctionCalledYet() {

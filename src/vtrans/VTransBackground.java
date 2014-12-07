@@ -51,7 +51,7 @@ public class VTransBackground
   		_vtransDynLibJNI.loadDynLib("VTrans");
   		
 //  		boolean testMode = true;
-  		if( /*! testMode*/ ! _vtransApp._runningOnEmulator )
+//  		if( /*! testMode*/ ! _vtransApp._runningOnEmulator )
   			_vtransDynLibJNI.callSettings("logging", "disable");
       
   		Log.i("initializeVTrans", "before calling Init");

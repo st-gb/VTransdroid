@@ -12,3 +12,6 @@ APP_STL := stlport_static
 # from http://stackoverflow.com/questions/4663291/android-ndk-r5-and-support-of-c-exception
 # (for Apache Xerces)
 APP_CPPFLAGS += -fexceptions
+
+#from http://www.cocos2d-x.org/wiki/Build_HelloWorld_on_android_x86_platform
+APP_ABI := x86

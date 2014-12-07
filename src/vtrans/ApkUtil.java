@@ -175,6 +175,7 @@ public class ApkUtil
     do
     {
       i = bis.read();
+      //TODO use interlockedincrement here?
       ++ _bytesCopied;
       bos.write(i);
     }while( i != END_OF_STREAM );
