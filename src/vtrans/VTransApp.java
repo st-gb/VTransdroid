@@ -28,7 +28,11 @@ public class VTransApp
   private static final float _MINIMUM_TEXT_HEIGHT_IN_PIXELS = 15.0f;
   ApkUtil _apkUtil = null;
 	VTransDynLibJNI _vtransDynLibJNI = new VTransDynLibJNI();
-	boolean _LogInTranslationEngine = false;
+	public VTransDynLibJNI get_vtransDynLibJNI() {
+    return _vtransDynLibJNI;
+  }
+
+  boolean _LogInTranslationEngine = false;
 	String _rootDirectoryPath;
 	private Thread thread;
 	//TODO
@@ -50,6 +54,8 @@ public class VTransApp
   SharedPreferences _sharedPrefs;
   private float _initialMinimumTextHeightInPixels;
   private float _initialMaximumTextHeightInPixels;
+  protected boolean _translateOnChangedText = true;
+  private TranslateActivity _translateActivity;
 
   /** from http://stackoverflow.com/questions/5755460/how-to-change-the-default-language-of-android-emulator 
    *  @see WARNING: also changes the dictionary/ word suggestions while text 
@@ -239,5 +245,17 @@ public class VTransApp
     _initialMaximumTextHeightInPixels = _sharedPrefs.getFloat(
         PREF_MAX_TEXT_HEIGHT_IN_PIXELS, _MAXIMUM_TEXT_HEIGHT_IN_PIXELS);
     _maximumTextHeightInPixelsEditText = _initialMaximumTextHeightInPixels;
+  }
+
+  public void addOnKeyListenerForEnglishText() {
+    _translateActivity.addOnKeyListenerForEnglishText();
+  }
+
+  public void setTranslateActivity(TranslateActivity translateActivity) {
+    _translateActivity = translateActivity;
+  }
+
+  public void deleteOnKeyListenerForEnglishText() {
+    _translateActivity.deleteOnKeyListenerForEnglishText();
   }
 }

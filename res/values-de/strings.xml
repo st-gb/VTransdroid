@@ -7,4 +7,5 @@
     <string name="lblEnglishText">Englischer Text:</string>
     <string name="lblGermanText">Deutscher Text:</string>
     <string name="logInTranslationEngine">in der Übersetzungs-Engine loggen(langsamer)</string>
+    <string name="instantTranslation">Übersetzung nach Text-Änderung</string>
 </resources>

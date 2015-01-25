@@ -32,21 +32,6 @@ public class OnTranslateButtonClickListener
 	@Override
   public void onClick(View view)
   {
-  	final String englishText = _translateActivity._englishText.getText().toString();
-    Log.v("OnTranslateButtonClickListener onClick", englishText);
-//    translateActivity._vtransApp._translationStopped = false;
-    
-    //from http://stackoverflow.com/questions/833768/java-code-for-getting-current-time
-//    Date currentTime = new Date();
-//    final String strCurrentTime = currentTime.getDay() + "-" + currentTime.getMonth() + " " + 
-//  		currentTime.getHours() + ":" + currentTime.getMinutes() + ":" + currentTime.getSeconds();
-//    _guiCallBacks.setGermanText("translating (started:" + strCurrentTime + ")");
-    
-    _translateActivity.setTranslateControlsState(false);
-    _translateActivity._stopButton.setEnabled(true);
-    
-    Translater translater = new Translater(_guiCallBacks, englishText, _vTransDynLibJNI);
-    Thread thread = new Thread( translater, "Translater");
-    thread.start();
+	  _translateActivity.translate();
   }
 }

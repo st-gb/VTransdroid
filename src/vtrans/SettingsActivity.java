@@ -51,10 +51,11 @@ public class SettingsActivity
 	 * on tablets.
 	 */
 	private static final boolean ALWAYS_SIMPLE_PREFS = false;
-	CheckBox _LogInTranslationEngineButton;
+	CheckBox _logInTranslationEngineButton;
 	VTransApp _vtransApp;
   private EditText _minimumTextHeightInPixelsEditText;
   private EditText _maximumTextHeightInPixelsEditText;
+  private CheckBox _translateOnTextChangesCheckBox;
   
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -62,8 +63,6 @@ public class SettingsActivity
 	  super.onCreate(savedInstanceState);
 	  setContentView(R.layout.settings);
 	  
-	  _LogInTranslationEngineButton = (CheckBox) 
-  		findViewById(R.id.logInTranslationEngine);
 	  _minimumTextHeightInPixelsEditText = (EditText)
 	    findViewById(R.id.mininumTextHeightInPixelsEditText);
     _maximumTextHeightInPixelsEditText = (EditText)
@@ -71,39 +70,72 @@ public class SettingsActivity
 	  
   	_vtransApp = (VTransApp) getApplication();
   	Log.v("SettingsActivity", "onCreate _vtransApp:" + _vtransApp );
-	  _LogInTranslationEngineButton.setChecked(
-  		_vtransApp._LogInTranslationEngine);
-  	
-	  _LogInTranslationEngineButton.setOnClickListener(
-  		new View.OnClickListener() {	
-				@Override
-				public void onClick(View v) {
-					final boolean isSelected = //v.isChecked();
-						_LogInTranslationEngineButton.isChecked();
-					Log.v("SettingsActivity", "onCreate setting state to:" + isSelected );
-					_vtransApp._LogInTranslationEngine = isSelected;
-					if( isSelected)
-	          try {
-	            _vtransApp._vtransDynLibJNI.callSettings("logging", "enable");
-	            //TODO show in GUI
-//	            _vtransApp._translateActivity._guiCallBack.setWarning("logging enabled(->slow)");
-            } catch (Exception e) {
-	            // TODO show error in GUI
-	            e.printStackTrace();
-            }
-					else
-	          try {
-	            _vtransApp._vtransDynLibJNI.callSettings("logging", "disable");
-            } catch (Exception e) {
-	            // TODO show error in GUI
-	            e.printStackTrace();
-            }
-				}
-			});
+	  
+    initTranslateOnTextChangesButton();
+    initLogInTranslationEngineButton();
+    
 	  updateUIFromMemberVars();
 	}
 	
-	private void updateUIFromMemberVars() {
+	private void initTranslateOnTextChangesButton() {
+    _translateOnTextChangesCheckBox = (CheckBox) 
+        findViewById(R.id.instantTranslation);
+    _translateOnTextChangesCheckBox.setChecked(
+        _vtransApp._translateOnChangedText);
+    if( _vtransApp._translateOnChangedText )
+    {
+      _translateOnTextChangesCheckBox.setOnClickListener( new View.OnClickListener()
+      {  
+        @Override
+        public void onClick(View view) {
+          final boolean isSelected = //v.isChecked();
+            _translateOnTextChangesCheckBox.isChecked();
+          Log.v("SettingsActivity", "onCreate setting state to:" + isSelected );
+          _vtransApp._translateOnChangedText = isSelected;
+          if( isSelected)
+            _vtransApp.addOnKeyListenerForEnglishText();
+          else
+            _vtransApp.deleteOnKeyListenerForEnglishText();
+        }
+      });
+    }
+  }
+
+  private void initLogInTranslationEngineButton() {
+    _logInTranslationEngineButton = (CheckBox) 
+        findViewById(R.id.logInTranslationEngine);
+    _logInTranslationEngineButton.setChecked(
+        _vtransApp._LogInTranslationEngine);
+    
+    _logInTranslationEngineButton.setOnClickListener(
+        new View.OnClickListener() {  
+          @Override
+          public void onClick(View v) {
+            final boolean isSelected = //v.isChecked();
+              _logInTranslationEngineButton.isChecked();
+            Log.v("SettingsActivity", "onCreate setting state to:" + isSelected );
+            _vtransApp._LogInTranslationEngine = isSelected;
+            if( isSelected)
+              try {
+                _vtransApp._vtransDynLibJNI.callSettings("logging", "enable");
+                //TODO show in GUI
+//                _vtransApp._translateActivity._guiCallBack.setWarning("logging enabled(->slow)");
+              } catch (Exception e) {
+                // TODO show error in GUI
+                e.printStackTrace();
+              }
+            else
+              try {
+                _vtransApp._vtransDynLibJNI.callSettings("logging", "disable");
+              } catch (Exception e) {
+                // TODO show error in GUI
+                e.printStackTrace();
+              }
+          }
+        });
+  }
+
+  private void updateUIFromMemberVars() {
 	  _maximumTextHeightInPixelsEditText.setText(
       Float.toString(_vtransApp._maximumTextHeightInPixelsEditText) );
 	  _minimumTextHeightInPixelsEditText.setText(

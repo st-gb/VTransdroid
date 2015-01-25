@@ -115,10 +115,10 @@ public class VTransDynLibJNI
     Log.d("JNI", "callFreeMemory end");
   }
   
-  public void callSettings(String name, String value)
+  public void callSettings(final String name, final String value)
 		throws java.lang.Exception
   {
-		Log.d("JNI", "callSettings begin name:" + name + " value:" + value );
+		Log.d("JNI", "callSettings begin name:\"" + name + "\" value:\"" + value + "\"");
   	try{
   		byte by = Settings(name, value);
   		if( by > 0 )
@@ -196,7 +196,9 @@ public class VTransDynLibJNI
 	{
 		if( _currentWorkingDirToUse == null )
 			_currentWorkingDirToUse = _configurationDirFullPath;
-		Log.d("callInit", "before calling native Init method");
+		Log.d("callInit", "before calling native Init method with args:" + 
+	    _mainConfigFilePath + "," + _configurationDirFullPath + "," +
+	    _currentWorkingDirToUse);
 		_initReturnCode = Init(//Context.getFilesDir().getPath() +"assets/configuration/VTrans_main_config.xml"
 	//  		"/cache/VTrans_main_config.xml", 
 	//  		"/data/data/vtrans.dynlib/assets/configuration/VTrans_main_config.xml",
@@ -205,6 +207,6 @@ public class VTransDynLibJNI
 			_configurationDirFullPath,
 			_currentWorkingDirToUse
 			);
-		Log.d("callInit", "after calling native Init method");
+		Log.d("callInit", "after calling native Init method: return value:" + _initReturnCode);
   }
 }

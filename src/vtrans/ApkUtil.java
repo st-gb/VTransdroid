@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import vtrans.TranslateActivity.GuiCallBacks;
-
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.content.res.AssetManager.AssetInputStream;
 import android.util.Log;
 
 public class ApkUtil
@@ -144,6 +144,9 @@ public class ApkUtil
 	  Log.i("VTransDynLibJNI", "createDirectory dir exists?" + configDir.exists() );
   }
 
+  /** See http://www.javaworld.com/article/2076241/build-ci-sdlc/tweak-your-io-performance-for-faster-runtime.html:
+  *  fastest is "Read data 1 K at a time, using FileInputStream.read(byte[]), 
+  *  and access the data from the buffer" */
   private void copyFileViaSelfBufferedInputStream(final InputStream is,
     final File file) throws IOException
   {
@@ -153,9 +156,17 @@ public class ApkUtil
     int numBytesRead;
     do
     {
-      numBytesRead = is.read(buffer);
+      numBytesRead = is.
+        /** "read" Returns the number of bytes actually read or -1 if the end 
+          * of the stream has been reached. */
+        read(buffer);
+      if( numBytesRead == 0)
+        Log.w("copyFileViaSelfBufferedInputStream", "0 bytes read");
       _bytesCopied += numBytesRead;
-      fos.write(buffer);
+      if( numBytesRead > 0)
+        /** If not specifying the number of bytes to write then the file size 
+         * gets a multiple of the (default) buffer size (e.g. 1024 bytes) */
+        fos.write(buffer, 0, numBytesRead);
     }while( numBytesRead == FILE_BUFFER_SIZE );
     fos.close();
     is.close();
@@ -191,8 +202,12 @@ public class ApkUtil
   	Log.i("VTransDynLibJNI", "extractFile: \"" + filePath + "\" from assets" );
   	_guiCB.setStatusText("extracting " + filePath);
   	  	
-		InputStream is = _assetManager.open(//"configuration/VTrans_main_config.xml"
-			filePath);
+//		AssetInputStream assetInputStream = new AssetInputStream();
+		_fileSizeInBytes = getFileSize(filePath);
+		/** Must be created after calling "getFileSize", else the file size of 
+		*  created files was zero. */
+    InputStream is = _assetManager.open(//"configuration/VTrans_main_config.xml"
+        filePath);
 		
   	//from http://stackoverflow.com/questions/6992002/size-of-file-which-we-get-through-assetmanager-function-getassets-in-android
 		/** openFd() error: can not be opened ... compressed */
@@ -220,7 +235,27 @@ public class ApkUtil
 		Log.v("VTransDynLibJNI", "file size: " + file.length() );	  
   }
 
-	public void possiblyCopyAssetFilesIntoFileSystemDir(final String assetDirPath)
+  /** The only fast way to determine a file size of an _assert_ (i.e. a file 
+   * within an archive file) file is to seek the file pointer */
+	private long getFileSize(final String filePath) throws IOException
+	{
+	  /** Opens a new InputStream because "skip()" is used, so it can not be  
+	  * seeked to the file begin. */
+	  InputStream inputStream = _assetManager.open(//"configuration/VTrans_main_config.xml"
+      filePath);
+	  long numBytesSkipped = 0;//the number of bytes actually skipped.
+	  final long NUM_BYTES_TO_SKIP = 100000;
+	  int iterations = 0;
+	  while( (numBytesSkipped = inputStream.skip(NUM_BYTES_TO_SKIP) ) == NUM_BYTES_TO_SKIP )
+	  {
+	    ++ iterations;
+	  }
+	  inputStream.close();
+	  final long fileSizeInBytes = iterations * NUM_BYTES_TO_SKIP + numBytesSkipped;
+	  return fileSizeInBytes;
+  }
+
+  public void possiblyCopyAssetFilesIntoFileSystemDir(final String assetDirPath)
     throws IOException
 	{		
 		if( ! configDataCopied(assetDirPath) )

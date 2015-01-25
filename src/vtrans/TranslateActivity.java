@@ -103,6 +103,7 @@ public class TranslateActivity
 
 	  /** Must be assigned at first because reference is needed in following calls.*/
     _vtransApp = (VTransApp) getApplication();
+    _vtransApp.setTranslateActivity(this);
 	  assignControlsToMemberVariables();
 	  setControlStatesAndListeners();
 	  
@@ -166,6 +167,8 @@ public class TranslateActivity
 		updateGUIAfterInit();
 		}
 	};
+  private Thread _translationThread;
+  private WaitForTranslationEndedThread _waitForTranslationEndedThread;
 	
 	/** @author Stefan Seide */
 	public void vtransIsReady(final boolean isReady) {
@@ -260,25 +263,33 @@ public class TranslateActivity
 			});
 		}
 
-		public void vtransIsReady(boolean b)
+		public void vtransIsReady(boolean isReady)
 		{
-			Log.d("GUIcallbacks", "vtransIsReady ready?:" + b);
+			Log.d("GUIcallbacks", "vtransIsReady ready?:" + isReady);
 			runOnUiThread(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-				  Log.v("vtransIsReady", "runOnUiThread run");
-				  /** Must be enabled before assigning a click listener? */
-          _translateButton.setEnabled(true);
-			    _translateButton.setOnClickListener(new OnTranslateButtonClickListener(
-		    		_vtransApp._vtransDynLibJNI, _translateActivity) );
-			    _stopButton.setOnClickListener(new OnStopButtonClickListener(
-			    		_vtransApp, TranslateActivity.this) );
-		      _stopButton.setEnabled(false);
-          Log.v("vtransIsReady", "runOnUiThread end");
-				}
-			});
+  			{
+  				@Override
+  				public void run()
+  				{
+  				  Log.v("TranslateActivity.vtransIsReady", "runOnUiThread run");
+  				  /** Must be enabled before assigning a click listener? */
+            _translateButton.setEnabled(true);
+  			    _translateButton.setOnClickListener(new OnTranslateButtonClickListener(
+  		    		_vtransApp._vtransDynLibJNI, _translateActivity) );
+  			    if( _vtransApp._translateOnChangedText )
+              _englishText.setOnKeyListener(new OnEnglishTextChangedListener(
+                TranslateActivity.this) );
+  			    _stopButton.setOnClickListener(new OnStopButtonClickListener(
+  			    		_vtransApp, TranslateActivity.this) );
+  		      _stopButton.setEnabled(false);
+  		      //if( // isReady == true )
+  		      {
+  		        translate();
+  		      }
+            Log.v("TranslateActivity.vtransIsReady", "runOnUiThread end");
+  				}
+  			}
+			);
       Log.d("GUIcallbacks", "vtransIsReady end");
     }
 
@@ -335,5 +346,51 @@ public class TranslateActivity
 	public void setTranslateControlsState(boolean enabled) {
 		_englishText.setEnabled(enabled);
     _translateButton.setEnabled(enabled);
+  }
+
+  public void translate()
+  {
+    if( _translationThread != null && _translationThread.isAlive() )
+    {
+      if( _waitForTranslationEndedThread == null && ! _waitForTranslationEndedThread.isAlive() )
+        _waitForTranslationEndedThread = new WaitForTranslationEndedThread(
+          this);
+    }
+    else
+    {
+      final String englishText = _englishText.getText().toString();
+      Log.v("TranslateActivity translate", englishText);
+      if( ! englishText.isEmpty() )
+      {
+  //    translateActivity._vtransApp._translationStopped = false;
+      
+      //from http://stackoverflow.com/questions/833768/java-code-for-getting-current-time
+  //    Date currentTime = new Date();
+  //    final String strCurrentTime = currentTime.getDay() + "-" + currentTime.getMonth() + " " + 
+  //      currentTime.getHours() + ":" + currentTime.getMinutes() + ":" + currentTime.getSeconds();
+  //    _guiCallBacks.setGermanText("translating (started:" + strCurrentTime + ")");
+      
+        setTranslateControlsState(false);
+        _stopButton.setEnabled(true);
+        
+        Translater translater = new Translater(callbacks, englishText, 
+          _vtransApp.get_vtransDynLibJNI() );
+        _translationThread = new Thread( translater, "Translater");
+        _translationThread.start();
+      }
+    }
+  }
+
+  public Thread getTranslationThread() {
+    return _translationThread;
+  }
+
+  public void addOnKeyListenerForEnglishText() {
+    _englishText.setOnKeyListener(new OnEnglishTextChangedListener(
+      this) );
+  }
+
+  public void deleteOnKeyListenerForEnglishText() {
+    _englishText.setOnKeyListener(null);
   }
 }

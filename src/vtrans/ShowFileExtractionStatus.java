@@ -25,8 +25,7 @@ public class ShowFileExtractionStatus
 		do
 		{
 			_guiCallBacks.setDuration(_apkUtil.getNumBytesCopied() 
-				//+ "/" + _apkUtil._fileSizeInBytes 
-				+ " bytes copied");
+				+ " of " + _apkUtil._fileSizeInBytes + " bytes copied");
 			try {
 	      Thread.sleep(1000);
       } catch (InterruptedException e) {

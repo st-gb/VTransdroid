@@ -56,7 +56,7 @@ public class VTransBackground
       
   		Log.i("initializeVTrans", "before calling Init");
   		_vtransDynLibJNI.callInit( /*_cacheDir.toString()*/);
-  		Log.i("initializeVTrans", "after calling Init");
+  		Log.i("initializeVTrans", "after calling Init: return value:" + _vtransDynLibJNI.get_initReturnCode() );
   		
     } catch (Exception e) {
       // TODO Auto-generated catch block
@@ -77,8 +77,12 @@ public class VTransBackground
 		if ( _vtransDynLibJNI.get_initReturnCode() == 0) {
 			callback.vtransIsReady(true);
 		}
-		callback.setStatusText("after Initializing Trans:"
-			+ InitFunction.getInitMessage(_vtransDynLibJNI.get_initReturnCode() ));
+		final byte initReturnCode = _vtransDynLibJNI.get_initReturnCode();
+		if( initReturnCode == InitFunction.Init_return_codes.success.ordinal() )
+      callback.setStatusText("Initializing VTrans translation engine succeeded");
+		else
+  		callback.setStatusText("after Initializing translation engine:"
+  			+ InitFunction.getInitMessage(initReturnCode ));
 	}
 	
 	/** Seide: Variante B) indirekt ueber Handler und Post
