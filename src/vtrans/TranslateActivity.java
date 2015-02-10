@@ -169,6 +169,9 @@ public class TranslateActivity
 	};
   private Thread _translationThread;
   private WaitForTranslationEndedThread _waitForTranslationEndedThread;
+
+  private OnEnglishTextChangedListener _onEnglishTextChangedListener = 
+    new OnEnglishTextChangedListener(this);
 	
 	/** @author Stefan Seide */
 	public void vtransIsReady(final boolean isReady) {
@@ -277,13 +280,13 @@ public class TranslateActivity
   			    _translateButton.setOnClickListener(new OnTranslateButtonClickListener(
   		    		_vtransApp._vtransDynLibJNI, _translateActivity) );
   			    if( _vtransApp._translateOnChangedText )
-              _englishText.setOnKeyListener(new OnEnglishTextChangedListener(
-                TranslateActivity.this) );
+              _englishText.addTextChangedListener(_onEnglishTextChangedListener);
   			    _stopButton.setOnClickListener(new OnStopButtonClickListener(
   			    		_vtransApp, TranslateActivity.this) );
   		      _stopButton.setEnabled(false);
   		      //if( // isReady == true )
   		      {
+              Log.v("TranslateActivity.vtransIsReady", "calling translate");
   		        translate();
   		      }
             Log.v("TranslateActivity.vtransIsReady", "runOnUiThread end");
@@ -344,20 +347,36 @@ public class TranslateActivity
 	}
 
 	public void setTranslateControlsState(boolean enabled) {
-		_englishText.setEnabled(enabled);
+//		_englishText.setEnabled(enabled);
     _translateButton.setEnabled(enabled);
   }
 
-  public void translate()
+	/** May be called from different thread: 
+	 *  -UI thread
+	 *  -VTrans native engine init thread
+	 *  -Wait for translation ended thread 
+	 *  so _synchronize_ access */
+  public synchronized void translate()
   {
+    Log.v("TA.translate", "begin" );
+    try
+    {
+      if( _waitForTranslationEndedThread != null && ! _waitForTranslationEndedThread.isAlive() )
+        _waitForTranslationEndedThread = null;
     if( _translationThread != null && _translationThread.isAlive() )
     {
-      if( _waitForTranslationEndedThread == null && ! _waitForTranslationEndedThread.isAlive() )
+      Log.v("TA.translate", "already translating" );
+      if( _waitForTranslationEndedThread == null //&& ! _waitForTranslationEndedThread.isAlive() 
+          )
+      {
         _waitForTranslationEndedThread = new WaitForTranslationEndedThread(
           this);
+        _waitForTranslationEndedThread.start();
+      }
     }
     else
     {
+      Log.v("TA.translate", "not already translating" );
       final String englishText = _englishText.getText().toString();
       Log.v("TranslateActivity translate", englishText);
       if( ! englishText.isEmpty() )
@@ -379,6 +398,11 @@ public class TranslateActivity
         _translationThread.start();
       }
     }
+    }
+    catch(Throwable t)
+    {
+      Log.e("TA.translate", t.toString() );
+    }
   }
 
   public Thread getTranslationThread() {
@@ -386,11 +410,11 @@ public class TranslateActivity
   }
 
   public void addOnKeyListenerForEnglishText() {
-    _englishText.setOnKeyListener(new OnEnglishTextChangedListener(
-      this) );
+    _englishText.addTextChangedListener(_onEnglishTextChangedListener);
   }
 
   public void deleteOnKeyListenerForEnglishText() {
-    _englishText.setOnKeyListener(null);
+//    _englishText.setOnKeyListener(null);
+    _englishText.removeTextChangedListener(_onEnglishTextChangedListener);
   }
 }

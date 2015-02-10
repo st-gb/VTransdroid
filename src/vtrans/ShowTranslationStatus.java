@@ -37,7 +37,7 @@ public class ShowTranslationStatus implements Runnable {
 			String statusText = /*statusCode + */ statusMessage;
 			if( item.length() > 0 )
 				statusText += ":" + item + time;
-			Log.v("ShowTranslationStatus", "setting status to " + statusText);
+			Log.v("ShowTranslationStatus", "setting status to \"" + statusText + "\"");
 			_guiCallBacks.setGermanText(statusText);
 			
 			final java.util.Date currentTime = new java.util.Date();

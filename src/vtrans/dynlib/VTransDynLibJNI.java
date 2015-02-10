@@ -88,10 +88,13 @@ public class VTransDynLibJNI
    * class. Instead, call the "callXXX" methods) 
    * This enables catching an exception with a detailed error message. */
   public native byte GetStatus(/*String*/
-    //from http://www.javaworld.com/article/2077554/learn-java/java-tip-54--returning-data-in-reference-arguments-via-jni.html:
-		//must be class "StringBuffer" for call-by-reference
+    /** from http://www.javaworld.com/article/2077554/learn-java/java-tip-54--returning-data-in-reference-arguments-via-jni.html:
+		* must be class "StringBuffer" for call-by-reference (for StringBuffer 
+		* objects the object's attributes can be changed by calling methods like
+		* "append" in contrast to the "String" class where "+=" creates a new 
+		* object. */
 		StringBuffer strItem, String time);
-  public native byte  Init(
+  public native byte Init(
 		String jstrMainCfgFile,
     String jstrCfgFilesRootPath,
     String currentWorkingDir);
