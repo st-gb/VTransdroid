@@ -30,7 +30,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/englishLabel"
-        android:layout_toEndOf="@id/englishLabel"
         android:layout_toLeftOf="@+id/settings"
         android:inputType="textMultiLine" >
 
