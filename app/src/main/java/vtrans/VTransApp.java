@@ -55,7 +55,7 @@ public class VTransApp
   private float _initialMinimumTextHeightInPixels;
   private float _initialMaximumTextHeightInPixels;
   protected boolean _translateOnChangedText = true;
-  private TranslateActivity _translateActivity;
+  /*private*/ TranslateActivity _translateActivity;
 
   /** from http://stackoverflow.com/questions/5755460/how-to-change-the-default-language-of-android-emulator 
    *  @see WARNING: also changes the dictionary/ word suggestions while text 

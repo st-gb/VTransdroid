@@ -92,10 +92,15 @@ public class SettingsActivity
             _translateOnTextChangesCheckBox.isChecked();
           Log.v("SettingsActivity", "onCreate setting state to:" + isSelected );
           _vtransApp._translateOnChangedText = isSelected;
-          if( isSelected)
-            _vtransApp.addOnKeyListenerForEnglishText();
-          else
-            _vtransApp.deleteOnKeyListenerForEnglishText();
+          if( isSelected) {
+			  _vtransApp.addOnKeyListenerForEnglishText();
+			  //_vtransApp.enableManualTranslation();
+			  _vtransApp._translateActivity._translateButton.setEnabled(false);
+		  }
+          else {
+			  _vtransApp.deleteOnKeyListenerForEnglishText();
+			  _vtransApp._translateActivity._translateButton.setEnabled(true);
+		  }
         }
       });
     }

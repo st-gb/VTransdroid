@@ -176,14 +176,29 @@ public class ColouredTextView extends View
 //		spinner.set
 //		spinner.set
 	}
-	
-	//from http://stackoverflow.com/questions/6652400/how-can-i-get-the-canvas-size-of-a-custom-view-outside-of-the-ondraw-method
-	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-    _currentWidth = w;
-    _currentHeight = h;
-    super.onSizeChanged(w, h, oldw, oldh);
-    Log.v(this.getClass().getName(), " onSizeChanged new:" + w + "x" + h + 
-      " old:" + oldw + "x" + oldh);
+
+    protected void onLayout(boolean changed,
+             int left,
+             int top,
+             int right,
+             int bottom)
+    {
+        Log.v(this.getClass().getName(), " onLayout new:" + left + "left" + top +
+                " top:" + right + "right" + bottom);
+    }
+    /** from http://stackoverflow.com/questions/6652400/how-can-i-get-the-canvas-size-of-a-custom-view-outside-of-the-ondraw-method
+    /** Is called when the size of the View is changed while the _same_ activity
+        is executed , e.g. due to a soft keyboard (dis)appearance.
+        It is NOT called when e.g. returning from another activity and the software keyboard
+        disappeared. */
+	protected void onSizeChanged(int newWidthInPixels, int newHeightInPixels,
+        int oldWidthInPixels, int oldHeightInPixels)
+    {
+        _currentWidth = newWidthInPixels;
+        _currentHeight = newHeightInPixels;
+        super.onSizeChanged(newWidthInPixels, newHeightInPixels, oldWidthInPixels, oldHeightInPixels);
+        Log.v(this.getClass().getName(), " onSizeChanged new:" + newWidthInPixels + "x" + newHeightInPixels +
+          " old:" + oldWidthInPixels + "x" + oldHeightInPixels);
 	}
 	
   //http://stackoverflow.com/questions/5375817/android-pinch-zoom

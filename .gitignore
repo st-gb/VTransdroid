@@ -2,8 +2,11 @@
 #"A trailing "/**" matches everything inside. 
 # For example, "abc/**" matches all files inside directory "abc", 
 # relative to the location of the .gitignore file, with infinite depth."
-obj/**
+app/.externalNativeBuild/**
+app/build/**
 assets/**
+build/**
 bin/**
 jni/**
+obj/**
 **/*.class

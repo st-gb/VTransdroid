@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class TranslateActivity
 	extends android.app.Activity
@@ -36,6 +37,8 @@ public class TranslateActivity
 	EditText _englishText;
 	TextView _duration;
 	Button _translateButton;
+	ToggleButton _softKeyBoardToggleButton;
+	Button _infoButton;
 	Button _stopButton;
 	Button _settingsButton;
 	/** from S.Seide */
@@ -62,15 +65,55 @@ public class TranslateActivity
 //    Log.i("onCreate", "germanText:" + _germanText);
     
     _translateButton = /*new Button(this);*/ (Button) findViewById(R.id.translate);
+	_infoButton = (Button) findViewById(R.id.info);
+	_softKeyBoardToggleButton = (ToggleButton) findViewById(id.softKeyBoardToggleButton);
     _stopButton = /*new Button(this);*/ (Button) findViewById(R.id.stop);
     _settingsButton = (Button) findViewById(R.id.settings);
     _englishText = /*new EditText(this);*/ (EditText) findViewById(R.id.englishText);
+	  //https://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext
+	_englishText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		@Override
+		public void onFocusChange(View view, boolean hasFocus) {
+			if (!hasFocus) {
+/*				android.view.inputmethod.InputMethodManager inputMethodManager =
+					(android.view.inputmethod.InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+				inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);*/
+			}
+		}
+	});
     //TODO set input language to English
 //    _englishText.setI
     _duration = (TextView) findViewById(R.id.duration);
   }
-  
-  /** Should be called after assigning controls from class "R" to member 
+
+  void enableHideAndShowSoftKeyboard() {
+	  _softKeyBoardToggleButton.setOnCheckedChangeListener(
+			  new android.widget.CompoundButton.OnCheckedChangeListener() {
+				  public void onCheckedChanged(android.widget.CompoundButton buttonView, boolean isChecked) {
+					  if (isChecked) {
+						  android.view.inputmethod.InputMethodManager inputMethodManager =
+								  (android.view.inputmethod.InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+						  inputMethodManager.showSoftInput(_englishText, 0);
+					  } else {
+						  android.view.inputmethod.InputMethodManager inputMethodManager =
+								  (android.view.inputmethod.InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+						  inputMethodManager.hideSoftInputFromWindow(_englishText.getWindowToken(), 0);
+					  }
+				  }
+			  });
+/*	  _softKeyBoardToggleButton.setOnClickListener(
+		  new View.OnClickListener() {
+			  @Override
+			  public void onClick(View v) {
+			*//*android.view.inputmethod.InputMethodManager inputMethodManager =
+					(android.view.inputmethod.InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+			inputMethodManager.hideSoftInputFromWindow(_englishText.getWindowToken(), 0);*//*
+			  }
+		  }
+	  );*/
+  }
+
+	/** Should be called after assigning controls from class "R" to member
    *  variables or after building GUI by hand. */
   void setControlStatesAndListeners()
   {
@@ -87,9 +130,10 @@ public class TranslateActivity
           startActivity(intent);
         }
       }
+	);
 //        new OnTranslateButtonClickListener(
 //            _vtransApp._vtransDynLibJNI, this)
-    );
+	enableHideAndShowSoftKeyboard();
   }
   
 	/** @brief Called when:
@@ -343,7 +387,7 @@ public class TranslateActivity
 		super.onStop();
 //    int h = _scrollView.getHeight();
 //    h = _englishText.getHeight();    
-		Log.i("TranslateActivity", "onStop end");  	
+		Log.i("TranslateActivity", "onStop end");
 	}
 
 	public void setTranslateControlsState(boolean enabled) {

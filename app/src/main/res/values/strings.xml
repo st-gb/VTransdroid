@@ -3,6 +3,7 @@
     <string name="app_name">VTrans</string>
     <string name="title_activity_settings">settings</string>
     <string name="btnTranslate">translate</string>
+    <string name="btnInfo">info</string>
     <string name="btnSettings">settings</string>
     <string name="stop">stop</string>
     <string name="lblEnglishText">English text:</string>

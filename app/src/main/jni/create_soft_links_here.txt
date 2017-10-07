@@ -4,4 +4,5 @@ create links to the following repositories;
 
 in order to do this:
 -under Unix/Linux use "ln -s"
--under Windows use a "cmd" prompt with administrative rights and the "mklink" command
+-under Windows use a "cmd" prompt with administrative rights and the "mklink" command:
+ "mklink /d >>shortcut name<< destination"

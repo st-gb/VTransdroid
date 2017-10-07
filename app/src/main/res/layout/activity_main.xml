@@ -45,11 +45,15 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@id/germanLabel"
         android:inputType="textMultiLine" />
-    
-    <ScrollView 
+
+    <!-- for "clickable", "focusableInTouchMode" :
+      https://stackoverflow.com/questions/4165414/how-to-hide-soft-keyboard-on-android-after-clicking-outside-edittext -->
+    <ScrollView
         android:id="@+id/colouredTextViewScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_below="@id/germanLabel"
@@ -95,5 +99,22 @@
         android:layout_centerHorizontal="true"
         android:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ToggleButton
+        android:id="@+id/softKeyBoardToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/englishText"
+        android:layout_toLeftOf="@+id/translate"
+        android:checked="false"
+        android:text="kb" />
+
+    <Button
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/englishText"
+        android:layout_toLeftOf="@+id/stop"
+        android:text="@string/btnInfo" />
 
 </RelativeLayout>
