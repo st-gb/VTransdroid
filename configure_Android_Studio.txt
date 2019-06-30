@@ -1,0 +1,25 @@
+
+
+install Android SDK version as specified in app/build.gradle :
+  menu "File", menu item "Settings..."
+  Appearance & Behaviour -> System Settings -> Android SDK
+install Android NDK
+
+https://stackoverflow.com/questions/49788977/faced-with-org-gradle-api-projectconfigurationexception-error-on-my-gradle-bu:
+org.gradle.api.ProjectConfigurationException:
+"Root cause is the use of Java 9 or higher for doing gradle tasks. It should be Java 1.8"
+set Java to version 8: e.g. export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
+https://stackoverflow.com/questions/55912753/org-gradle-api-tasks-compile-compileoptions-setbootclasspathljava-lang-string:
+"ps -ef | grep '.*GradleDaemon.*'"
+
+ gradle/wrapper/gradle-wrapper.properties:
+  "distributionUrl=https\://services.gradle.org/distributions/gradle-5.1.1-all.zip"
+  had to be exchanged with
+  "distributionUrl=https://services.gradle.org/distributions/gradle-4.6-all.zip"
+
+
+https://stackoverflow.com/questions/49774922/org-gradle-internal-resolve-moduleversionnotfoundexception-could-not-find-com-a?rq=1
+ -> file "build.gradle"
+ -"Tools Menu->SDK Manager->"Android Studio" (bottom of the hierarchy tree) -> 
+  Enable "Embedded Maven repository" check box."

@@ -4,7 +4,8 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="15" />
+    <!--The Android min SDK version isn't specified in this XML file anymore-->
+    <!--uses-sdk android:minSdkVersion="15" /-->
     <!-- uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/-->
     
     <!-- developer.android.com/tools/device.html:

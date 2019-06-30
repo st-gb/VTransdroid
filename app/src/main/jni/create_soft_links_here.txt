@@ -4,5 +4,7 @@ create links to the following repositories;
 
 in order to do this:
 -under Unix/Linux use "ln -s"
+ , e.g. "ln -s /media/sg/devel1/SourceCodeManagement/VTrans3/src/
+ /media/sg/devel1/SourceCodeManagement/VTransdroid/app/src/main/jni/VTrans3_src"
 -under Windows use a "cmd" prompt with administrative rights and the "mklink" command:
  "mklink /d >>shortcut name<< destination"

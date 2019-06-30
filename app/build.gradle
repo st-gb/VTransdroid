@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 android {
+    //Android SDK version. Depends on the classes/methods used in the Java code.
     compileSdkVersion 15
     buildToolsVersion "25.0.0"
 
@@ -13,8 +14,12 @@ android {
             cmake {
                 // Passes optional arguments to CMake.
                 arguments "-DANDROID_ARM_NEON=TRUE", "-DEXE_TYPE:STRING=Android",
-                        "-DCOMMON_SOURCECODE_ROOT_PATH=C:/Users/Stefan/SourceCodeManagement/VTransdroid/app/src/main/jni/common_sourcecode",
-                        "-DMINI_XML_SOURCE=C:/Users/Public/mxml-release-2.10"
+                        //"-DCOMMON_SOURCECODE_ROOT_PATH=C:/Users/Stefan/SourceCodeManagement/VTransdroid/app/src/main/jni/common_sourcecode",
+                    //"-DCOMMON_SOURCECODE_ROOT_PATH=/media/sg/devel1/SourceCodeManagement/VTransdroid/app/src/main/jni/common_sourcecode",
+                 //https://docs.gradle.org/current/userguide/writing_build_scripts.html:
+                   // "projectDir: The directory containing the build script."
+                 "-DCOMMON_SOURCECODE_ROOT_PATH=${projectDir.getAbsolutePath()}/src/main/jni/common_sourcecode",
+                    "-DMINI_XML_SOURCE=C:/Users/Public/mxml-release-2.10"
                 // Sets optional flags for the C compiler.
                 //cFlags "-fexceptions", "-frtti"
                 //Needed for initializer list for array of struct with constructor
@@ -58,6 +63,7 @@ android {
 
     externalNativeBuild {
         cmake {
+            //Make a soft link from VTrans3 source folder to "app/src/main/jni/VTrans3_src"
             path "src/main/jni/VTrans3_src/CMakeLists.txt"
         }
     }
