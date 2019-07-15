@@ -1,8 +1,17 @@
 apply plugin: 'com.android.application'
 android {
-    //Android SDK version. Depends on the classes/methods used in the Java code.
+   ///Android SDK version. Depends on the API/classes/methods used in the Java
+   /// code of the Android app.
     compileSdkVersion 15
-    buildToolsVersion "25.0.0"
+    ///Android build tools version is not needed anymore: else warning:
+    ///"WARNING: The specified Android SDK Build Tools version (25.0.0) is
+    /// ignored, as it is below the minimum supported version (28.0.3) for
+    /// Android Gradle Plugin 3.4.1.
+    /// Android SDK Build Tools 28.0.3 will be used.
+    /// To suppress this warning, remove "buildToolsVersion '25.0.0'" from your
+    /// build.gradle file, as each version of the Android Gradle Plugin now has
+    /// a default version of the build tools."
+    //buildToolsVersion "25.0.0"
 
     defaultConfig {
         applicationId "vtrans.dynlib"
@@ -14,12 +23,15 @@ android {
             cmake {
                 // Passes optional arguments to CMake.
                 arguments "-DANDROID_ARM_NEON=TRUE", "-DEXE_TYPE:STRING=Android",
-                        //"-DCOMMON_SOURCECODE_ROOT_PATH=C:/Users/Stefan/SourceCodeManagement/VTransdroid/app/src/main/jni/common_sourcecode",
-                    //"-DCOMMON_SOURCECODE_ROOT_PATH=/media/sg/devel1/SourceCodeManagement/VTransdroid/app/src/main/jni/common_sourcecode",
-                 //https://docs.gradle.org/current/userguide/writing_build_scripts.html:
-                   // "projectDir: The directory containing the build script."
-                 "-DCOMMON_SOURCECODE_ROOT_PATH=${projectDir.getAbsolutePath()}/src/main/jni/common_sourcecode",
-                    "-DMINI_XML_SOURCE=C:/Users/Public/mxml-release-2.10"
+                //"-DUSE_TRANSLATION_RULES",
+                //"-DCOMMON_SOURCECODE_ROOT_PATH=C:/Users/Stefan/SourceCodeManagement/VTransdroid/app/src/main/jni/common_sourcecode",
+                //"-DCOMMON_SOURCECODE_ROOT_PATH=/media/sg/devel1/SourceCodeManagement/VTransdroid/app/src/main/jni/common_sourcecode",
+                //https://docs.gradle.org/current/userguide/writing_build_scripts.html:
+                // "projectDir: The directory containing the build script."
+                "-DCOMMON_SOURCECODE_ROOT_PATH=${projectDir.getAbsolutePath()}/src/main/jni/common_sourcecode",
+            ///Alternative: used soft linked path here as for
+            /// "COMMON_SOURCECODE_ROOT_PATH".
+                "-DMINI_XML_ROOT_DIR=/media/sg/devel1/mxml-2.12"
                 // Sets optional flags for the C compiler.
                 //cFlags "-fexceptions", "-frtti"
                 //Needed for initializer list for array of struct with constructor

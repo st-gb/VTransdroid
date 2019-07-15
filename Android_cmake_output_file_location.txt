@@ -1,0 +1,6 @@
+see/from 
+https://stackoverflow.com/questions/42229620/android-studio-cmake-how-to-print-debug-message-in-compile-time:
+
+[project folder]/app/.externalNativeBuild/cmake/<build type>/<CPU type>/
+e.g.: [project folder]/app/.externalNativeBuild/cmake/debug/arm64-v8a/cmake_build_output.txt
+   -||- /android_gradle_generate_cmake_ninja_json_armeabi-v7a.stderr.txt

@@ -1,0 +1,7 @@
+-"Session 'app': Error Installing APKs":
+ -https://stackoverflow.com/questions/37015030/session-app-error-installing-apk/42617142:
+  -Sync Project With Gradle Files 
+-"Session 'app': Error Launching activity":
+ "To disable "instant run", you can go to Preference Dialog ( May be Setting
+ dialog on Windows)"
+ -via menu "File"

@@ -102,11 +102,10 @@ public class VTransApp
       _rootDirectoryPath = getCacheDir().toString();
   }
   
-	/** (non-Javadoc)
-	 * @see android.app.Application#onCreate()
-   * Seide: diese Methode wird einmal zu Beginn beim Start der Anwendung aufgerufen - hier kannst
-   * du eine notwendige Initialisierung der Configdateien machen mit ApkUtils
-	 */
+  /**@see android.app.Application#onCreate()  Stefan Seide(Trilobyte SE):"diese
+  * Methode wird einmal zu Beginn beim Start der Anwendung aufgerufen - hier 
+  * kannst du eine notwendige Initialisierung der Configdateien machen mit 
+  * ApkUtils" */
 	@Override
 	public void onCreate()
 	{
@@ -122,11 +121,10 @@ public class VTransApp
 		_vtransDynLibJNI.setPathes(_rootDirectoryPath);
   }
 	
-  /** "Professional Android Application Development (Wrox Programmer to Programmer)"
-   *  "Chapter 6: Data Storage, Retrieval, and Sharing"
-   *  "8. Fill in the savePreferencesmethod to record the current preferences, 
-   *  based on the UI selections, to the Shared Preference object." *
-   */
+  /** "Professional Android Application Development" ("Wrox Programmer to 
+   *  "Programmer") Chapter 6: "Data Storage, Retrieval, and Sharing"
+   *  "8. Fill in the savePreferences method to record the current preferences,
+   *  based on the UI selections, to the Shared Preference object." */
   private void savePreferences() {
 //    storeUIcontrolValuesInMemberVars();
     //TODO

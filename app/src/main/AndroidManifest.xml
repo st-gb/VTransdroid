@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="vtrans.dynlib"
-    android:versionCode="1"
-    android:versionName="1.0" >
+  package="vtrans.dynlib"
+  android:versionCode="1"
+  android:versionName="1.0" >
 
-    <!--The Android min SDK version isn't specified in this XML file anymore-->
-    <!--uses-sdk android:minSdkVersion="15" /-->
-    <!-- uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/-->
+  <!--The Android min SDK version isn't specified in this XML file anymore-->
+  <!--uses-sdk android:minSdkVersion="15" /-->
+
+  <!--Needed for copying files from "assets" dir in .apk archive file to a file
+     system so that the native translation library can acces the files.-->
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     
     <!-- developer.android.com/tools/device.html:
       "your published application should usually not be debuggable" 
