@@ -23,11 +23,14 @@ public class AssetFilesExtracter implements Runnable
 		_vtransDynLibJNI = vTransApp._vtransDynLibJNI;
 	}
 	
-	@Override
-	public void run() {
-  	try
-  	{
-	    _apkUtil.possiblyCopyAssetFilesIntoFileSystemDir("configuration");
+  @Override
+  public void run() {
+  	try //TODO The current implementation only checks if the directories exists
+  	{ //and if they exist nothing is copied.
+      // Better check if all files have been copied: compare "assets" dir
+      // in .apk file bytewise with dir in Android file system because else an
+  	  //updated version may contain the wrong files and malfunction.
+      _apkUtil.possiblyCopyAssetFilesIntoFileSystemDir("configuration");
       _apkUtil.possiblyCopyAssetFilesIntoFileSystemDir("dictionaries");
 	    
 	  	if( _vtransDynLibJNI./*initFunctionCalledYet()*/get_initReturnCode() == -1 )
@@ -50,5 +53,5 @@ public class AssetFilesExtracter implements Runnable
 	    e.printStackTrace();
     }
 //	  _callbacks.setTranslateControlsState(true); //_translateButton.setEnabled(false);
-	}
+  }
 }

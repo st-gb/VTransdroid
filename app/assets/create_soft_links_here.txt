@@ -1,10 +1,22 @@
 create links to the following repositories;
 -"VTrans3" repository, folder "configuration"
--"VTrans3" repository, dictionary file (currently "dictionaries/TUchemnitz/en-de/en-de_composed_from_word_classes2,sorted,wout' '.txt")
- or whole dictionary folder "dictionaries")
+-"VTrans3" repository, dictionary file (currently
+ "dictionaries/TUchemnitz/en-de/en-de_composed_from_word_classes2,sorted,wout' '.txt")
+ -for the dictionary used see file "configuration/VTrans_main_config.xml",
+  XML attribute "vocabulary_file"
 
 in order to do this:
--under Unix/Linux use "ln -s"
--under Windows use a "cmd" prompt with administrative rights and the "mklink" command:
+-under Unix/Linux use "ln -s":
+ -e.g. in folder "app/assets":
+  execute "ln -s ../../../VTrans3/configuration/ configuration"
+ -e.g. in folder "app/assets":
+  execute "ln -s "../../../VTrans3/dictionaries/TUchemnitz/en-de/
+  en-de_composed_from_word_classes2,sorted,wout' '.txt" "dictionaries/TUchemnitz
+  /en-de/en-de_composed_from_word_classes2,sorted,wout' '.txt""
+
+ (replace relative path (containing "..") by absolute path, else broken link)
+
+-under Windows use a "cmd" prompt with administrative rights and the "mklink"
+ command:
  for directories: "mklink /d >>shortcut name<< destination"
  for single files: "mklink >>shortcut name<< destination"

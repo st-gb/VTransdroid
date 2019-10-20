@@ -52,31 +52,37 @@ public class ApkUtil
 //		String assetRootPath = "configuration";
     assetRelativeFilePathes = _assetManager.list(//"configuration"
     		assetRootPath);
-  	Log.i("VTransDynLibJNI", "onCreate # assets:" + assetRelativeFilePathes.length);
-  	for(int i=0; i < assetRelativeFilePathes.length; ++ i)
+    final int numAssetsInDirLevel = assetRelativeFilePathes.length;
+  	Log.i("VTransDynLibJNI", "onCreate # assets:" +
+      numAssetsInDirLevel);
+  	for(int assetFileOrDirIdx = 0;assetFileOrDirIdx < numAssetsInDirLevel;
+		++ assetFileOrDirIdx)
   	{
-    	final String filePath = //"configuration/"
-    			assetRootPath + File.separator + assetRelativeFilePathes[i];
-  		final File fileOrDir = new File(filePath);
+      final String filePath = //"configuration/"
+        assetRootPath + File.separator + assetRelativeFilePathes[
+          assetFileOrDirIdx];
+      final File fileOrDir = new File(filePath);
     	
-    	Log.i("VTransDynLibJNI", "onCreate asset:" + assetRelativeFilePathes[i] 
-    			+ " exists? " +  fileOrDir.exists() + " ");
+      Log.i("VTransDynLibJNI", "onCreate asset:" + assetRelativeFilePathes[
+      	assetFileOrDirIdx] + " exists? " +  fileOrDir.exists() + " ");
     	
     	final boolean isFile = isFile(filePath);
     	if( ! isFile )
     	{
     		createDirectory(filePath);
     	}
-    	
-  		if( fileOrDir.isFile() )
-  		{
-	    	Log.i("VTransDynLibJNI", "onCreate is file:" + assetRelativeFilePathes[i]);
-  		}
-  		if( fileOrDir.isDirectory() )
-  		{
-	    	Log.i("VTransDynLibJNI", "onCreate is dir:" + assetRelativeFilePathes[i]);
-  		}
-  		extractAssetFiles(filePath);
+
+  	  if( fileOrDir.isFile() )
+      {
+        Log.i("VTransDynLibJNI", "onCreate is file:" + assetRelativeFilePathes[
+          assetFileOrDirIdx]);
+      }
+      if( fileOrDir.isDirectory() )
+      {
+        Log.i("VTransDynLibJNI", "onCreate is dir:" +
+          assetRelativeFilePathes[assetFileOrDirIdx]);
+      }
+      extractAssetFiles(filePath);
   		if( //f.length() > 0
   				isFile)
   			extractFile(filePath);
@@ -257,7 +263,7 @@ public class ApkUtil
 
   public void possiblyCopyAssetFilesIntoFileSystemDir(final String assetDirPath)
     throws IOException
-	{		
+	{//TODO handle dir create/copy errors and show errors in GUI
 		if( ! configDataCopied(assetDirPath) )
 		{
 			createAllDirLevels(assetDirPath);

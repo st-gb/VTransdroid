@@ -47,30 +47,49 @@ android {
         }
     }
 
-    sourceSets {
-        main {
-            manifest.srcFile 'src/main/AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['src/main/res']
-            assets.srcDirs = ['assets']
-            //https://stackoverflow.com/questions/16705954/adding-a-so-file-in-android-studio
-            // It must have a subdirectory like "armeabi-v7a" where the dynamic library resides
-            //jniLibs.srcDirs = ['libs']
-        }
-    }
+  //http://google.github.io/android-gradle-dsl/current/com.android.build.gradle.api.AndroidSourceSet.html
+  /** https://developer.android.com/studio/build :
+   * "Android Studio logically groups source code and resources for each module
+   * into source sets. A module’s main/ source set includes the code and
+   * resources used by all its build variants." */
+  sourceSets {
+    //https://developer.android.com/studio/projects
+    /** https://developer.android.com/studio/build :
+     * "This source set includes code and resources common to all build
+     * variants." */
+    main {
+        manifest.srcFile 'src/main/AndroidManifest.xml'
+      //java.srcDirs = ['src']
+      jni.srcDirs = ['src/main/jni']
+      /** If uncommenting includes the whole "src" folder (all native (C, C++)
+       * source files etc.) into the apk file.*/
+      //resources.srcDirs = ['src']
+      //aidl.srcDirs = ['src']
+      //renderscript.srcDirs = ['src']
+        res.srcDirs = ['src/main/res']
+        assets.srcDirs = ['assets']
+        //https://stackoverflow.com/questions/16705954/adding-a-so-file-in-android-studio
+        // It must have a subdirectory like "armeabi-v7a" where the dynamic library resides
+        jniLibs.srcDirs = ['libs']
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-        }
-        debug {
-            jniDebuggable true
-        }
+      //from https://stackoverflow.com/questions/44775001/how-to-remove-unused-items-from-android-apps-all-file
+      //exclude {'**/jni/*'}
     }
+  }
+
+  buildTypes {
+    //https://www.vogella.com/tutorials/AndroidBuild/article.html#building_gradle_minify
+    release {
+      minifyEnabled false
+      //shrinkResources true
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+    }
+    ///https://developer.android.com/studio/debug
+    debug {
+        jniDebuggable true
+      debuggable true
+    }
+  }
 
 
     externalNativeBuild {
@@ -79,6 +98,14 @@ android {
             path "src/main/jni/VTrans3_src/CMakeLists.txt"
         }
     }
+
+  //https://stackoverflow.com/questions/50739996/lint-found-fatal-errors-while-assembling-a-release-target/51363161
+  lintOptions {
+    checkReleaseBuilds false
+    // Or, if you prefer, you can continue to check for errors in release builds,
+    // but continue the build even when errors are found:
+    abortOnError false
+  }
 }
 
 dependencies {

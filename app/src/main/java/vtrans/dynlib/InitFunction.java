@@ -3,7 +3,7 @@ package vtrans.dynlib;
 public class InitFunction {
 
   public enum Init_return_codes
-  {
+  {//TODO important:1st enum value has numeric value 0?
     success,
     vocabularyFilePathIsEmpty,
     loadingVocabularyFileFailed,

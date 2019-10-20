@@ -1,0 +1,5 @@
+https://source.android.com/devices/tech/debug/native-crash
+
+error "art_sigsegv_fault" :
+This helped: remove all breakpoints in native code executed by Java class
+"VTransInitializer".

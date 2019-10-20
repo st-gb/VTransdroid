@@ -160,7 +160,7 @@ public class HierarchicObjectsFromXMLgenerator
     {
       _bTranslationXMLelement = false;
       _strCurrentXMLelement = localName;
-      if( localName.equals("grammar_part") )
+      if( localName.equals("parseTreeNode") )
         _strGrammarPartName = attributes.getValue("name");
     }
       //http://de.wikipedia.org/wiki/Cascading_Style_Sheets#Beispiel:

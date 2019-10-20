@@ -1,9 +1,12 @@
 
 
-install Android SDK version as specified in app/build.gradle :
-  menu "File", menu item "Settings..."
-  Appearance & Behaviour -> System Settings -> Android SDK
-install Android NDK
+install Android SDK version as specified in file "app/build.gradle" :
+ 1."File" menu -> "Settings..." menu item
+ "Settings" window:
+  in left pane tree:
+   2."Appearance & Behaviour" -> "System Settings" -> "Android SDK"
+  in right pane:
+   3. install Android NDK (under "SDK Tools")
 
 https://stackoverflow.com/questions/49788977/faced-with-org-gradle-api-projectconfigurationexception-error-on-my-gradle-bu:
 org.gradle.api.ProjectConfigurationException:
@@ -21,5 +24,29 @@ https://stackoverflow.com/questions/55912753/org-gradle-api-tasks-compile-compil
 
 https://stackoverflow.com/questions/49774922/org-gradle-internal-resolve-moduleversionnotfoundexception-could-not-find-com-a?rq=1
  -> file "build.gradle"
- -"Tools Menu->SDK Manager->"Android Studio" (bottom of the hierarchy tree) -> 
-  Enable "Embedded Maven repository" check box."
+ 1."Tools" menu -> "SDK Manager" menu item
+ "Settings for New Projects" window:
+  2. in left pane select "Android Studio" (bottom of the hierarchy tree)
+  3. check "Enable embedded Maven repository" check box
+
+
+to debug in C++ code:
+ 1."Tools" menu -> "SDK Manager" menu item
+ 2."Settings for New Projects" window:
+  -in left pane tree:
+   3."Appearance & Behaviour"->"System Settings"->"Android SDK"
+  4.right pane: in "SDK Tools" tab: select "LLDB": "Apply" button
+
+https://stackoverflow.com/questions/5293415/android-debugger-does-not-stop-at-breakpoints/29909997
+
+https://stackoverflow.com/questions/41585002/vertical-line-in-android-studio :
+ 1. "File" menu -> "Settings..." menu item
+ in "Settings" window:
+  left pane tree:
+   2. "Editor" -> "General" -> "Appearance"
+  right pane:
+   check "Show hard wrap guide [...]"
+  left pane tree:
+   3. "Editor" -> "Code Style"
+  right pane:
+   4."Hard wrap at" : "80"
