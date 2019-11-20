@@ -10,7 +10,9 @@ public class InitFunction {
     creatingLogFileFailed,
     loadingMainConfigFileFailed
   };
-  
+
+  //TODO only English messages. rename to EngInitMessages?
+  // There are thousands of languages->Better for every language 1 class?
   static final String InitMessage [] = new String [] { 
 		"success",
 		"vocabulary file path is empty",
@@ -18,11 +20,12 @@ public class InitFunction {
 		"creating log file failed",
 		"loading main config file failed"
 	};
-  
-	public static String getInitMessage(final byte by)
-	{
-		if( by < InitMessage.length )
-			return InitMessage[by];
-		return "";
-	}
+
+  //TODO rename to "getEngInitMsg"?
+  public static String getInitMessage(final byte by)
+  {
+    if( by < InitMessage.length )///Prevent ArrayIndexOutOfBoundsException
+      return InitMessage[by];
+    return "";
+  }
 }

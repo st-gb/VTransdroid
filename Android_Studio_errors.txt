@@ -14,4 +14,12 @@ Searched in the following locations:
 Required by:
     project :app
  -from https://stackoverflow.com/questions/49774922/org-gradle-internal-resolve-moduleversionnotfoundexception-could-not-find-com-a?rq=1:
-  "Tools Menu->SDK Manager->Android Studio ->Enable Embedded Maven repository checkBox."
+  1."Tools" menu -> "SDK Manager" menu item
+  2. "Android Studio" -> check "Enable embedded Maven repository" checkBox
+
+-Failure [INSTALL_FAILED_DEXOPT]:
+ https://stackoverflow.com/questions/5153515/how-do-i-solve-the-install-failed-dexopt-error
+ ->AVD device: "wipe data"
+
+
+22:52	Emulator: statvfs('/home/sg/.android/avd/Nexus_One_API_21.avd/snapshots/default_boot/ram.img') failed: No such file or directory

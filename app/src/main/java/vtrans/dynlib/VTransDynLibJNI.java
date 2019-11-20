@@ -121,17 +121,18 @@ public class VTransDynLibJNI
   public void callSettings(final String name, final String value)
 		throws java.lang.Exception
   {
-		Log.d("JNI", "callSettings begin name:\"" + name + "\" value:\"" + value + "\"");
+    Log.d("JNI", "callSettings begin name:\"" + name + "\" value:\"" + value +
+      "\"");
   	try{
-  		byte by = Settings(name, value);
-  		if( by > 0 )
-    		throw new java.lang.Exception("calling native function \"Translate\" failed:" 
-    				+ "allocating char string array failed" );  			
+  	  byte by = Settings(name, value);
+  	  if( by > 0 )//TODO really throw an exception or better return a value?
+        throw new java.lang.Exception("calling native function \"Settings\" "
+      	  + "failed:allocating char string array failed" );
   	}catch(Throwable t)
   	{
   		t.printStackTrace();
-  		throw new java.lang.Exception("calling native function \"Translate\" failed:" 
-				+ t.toString() );
+      throw new java.lang.Exception(
+        "calling native function \"Settings\" failed:" + t.toString() );
   	}
 		Log.d("JNI", "callSettings end");
   }
@@ -147,8 +148,8 @@ public class VTransDynLibJNI
   	}catch(Throwable t)
   	{
   		t.printStackTrace();
-  		throw new java.lang.Exception("calling native function \"Translate\" failed:" 
-				+ t.toString() );
+  	  throw new java.lang.Exception(
+        "calling native function \"Translate\" failed:" + t.toString() );
   	}
 		Log.d("JNI", "callTranslate end");
 		return xml;

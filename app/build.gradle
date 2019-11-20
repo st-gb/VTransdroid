@@ -1,6 +1,13 @@
 apply plugin: 'com.android.application'
 android {
-   ///Android SDK version. Depends on the API/classes/methods used in the Java
+    signingConfigs {
+        debug {
+            storeFile file('/media/sg/devel1/SourceCodeManagement/VTransdroid/keystores/upload-keystore.jks')
+            keyAlias = 'upload'
+        }
+    }
+
+    ///Android SDK version. Depends on the API/classes/methods used in the Java
    /// code of the Android app.
     compileSdkVersion 15
     ///Android build tools version is not needed anymore: else warning:

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -91,30 +92,32 @@
         android:text="duration"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <TextView
+  <TextView
         android:id="@+id/warning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/germanLabel"
         android:layout_centerHorizontal="true"
         android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+    android:visibility="invisible"/>
 
-    <ToggleButton
+  <ToggleButton
         android:id="@+id/softKeyBoardToggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/englishText"
         android:layout_toLeftOf="@+id/translate"
         android:checked="false"
-        android:text="kb" />
+        android:text="kb"
+    android:visibility="invisible"/>
 
-    <Button
+  <Button
         android:id="@+id/info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/englishText"
         android:layout_toLeftOf="@+id/stop"
-        android:text="@string/btnInfo" />
-
+        android:text="@string/btnInfo"
+    android:visibility="invisible"/>
 </RelativeLayout>

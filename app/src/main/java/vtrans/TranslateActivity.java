@@ -32,7 +32,8 @@ public class TranslateActivity
 	VTransApp _vtransApp;
 //	VTransDynLibJNI _vtransDynLibJNI = new VTransDynLibJNI();
 	//private Vector<Vector> _translations;
-	  
+
+  boolean _useInfoAndSoftKBtoggleBtn = false;
 	//TextView _textView;
 	EditText _englishText;
 	TextView _duration;
@@ -50,7 +51,7 @@ public class TranslateActivity
 	
   void assignControlsToMemberVariables()
   {
-    /** from "Professional Android ...", "Chapter 4: Creating User Interfaces" 
+    /** from "Professional Android ...", "Chapter 4: Creating User Interfaces"
     *  "Creating Activity User Interfaces with Views" */
     setContentView(R.layout.activity_main);
     
@@ -63,10 +64,12 @@ public class TranslateActivity
     _scrollView = (ScrollView) findViewById(R.id.colouredTextViewScrollView);
     
 //    Log.i("onCreate", "germanText:" + _germanText);
-    
+
     _translateButton = /*new Button(this);*/ (Button) findViewById(R.id.translate);
-	_infoButton = (Button) findViewById(R.id.info);
-	_softKeyBoardToggleButton = (ToggleButton) findViewById(id.softKeyBoardToggleButton);
+    if(_useInfoAndSoftKBtoggleBtn) {
+      _infoButton = (Button) findViewById(R.id.info);
+      _softKeyBoardToggleButton = (ToggleButton) findViewById(id.softKeyBoardToggleButton);
+	}
     _stopButton = /*new Button(this);*/ (Button) findViewById(R.id.stop);
     _settingsButton = (Button) findViewById(R.id.settings);
     _englishText = /*new EditText(this);*/ (EditText) findViewById(R.id.englishText);
@@ -87,20 +90,22 @@ public class TranslateActivity
   }
 
   void enableHideAndShowSoftKeyboard() {
-	  _softKeyBoardToggleButton.setOnCheckedChangeListener(
-			  new android.widget.CompoundButton.OnCheckedChangeListener() {
-				  public void onCheckedChanged(android.widget.CompoundButton buttonView, boolean isChecked) {
-					  if (isChecked) {
-						  android.view.inputmethod.InputMethodManager inputMethodManager =
-								  (android.view.inputmethod.InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-						  inputMethodManager.showSoftInput(_englishText, 0);
-					  } else {
-						  android.view.inputmethod.InputMethodManager inputMethodManager =
-								  (android.view.inputmethod.InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-						  inputMethodManager.hideSoftInputFromWindow(_englishText.getWindowToken(), 0);
-					  }
-				  }
-			  });
+    if (_useInfoAndSoftKBtoggleBtn) {
+      _softKeyBoardToggleButton.setOnCheckedChangeListener(
+      	//TODO source out to a distinct class?
+        new android.widget.CompoundButton.OnCheckedChangeListener() {
+      	  public void onCheckedChanged(android.widget.CompoundButton buttonView, boolean isChecked) {
+		  if (isChecked) {
+			android.view.inputmethod.InputMethodManager inputMethodManager =
+              (android.view.inputmethod.InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+			  inputMethodManager.showSoftInput(_englishText, 0);
+		  } else {
+            android.view.inputmethod.InputMethodManager inputMethodManager =
+	          (android.view.inputmethod.InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+			  inputMethodManager.hideSoftInputFromWindow(_englishText.getWindowToken(), 0);
+		  }
+         }
+        });
 /*	  _softKeyBoardToggleButton.setOnClickListener(
 		  new View.OnClickListener() {
 			  @Override
@@ -111,6 +116,7 @@ public class TranslateActivity
 			  }
 		  }
 	  );*/
+    }
   }
 
 	/** Should be called after assigning controls from class "R" to member
@@ -461,4 +467,12 @@ public class TranslateActivity
 //    _englishText.setOnKeyListener(null);
     _englishText.removeTextChangedListener(_onEnglishTextChangedListener);
   }
+
+  //crashed when rotating
+  //see https://stackoverflow.com/questions/28576824/my-first-android-app-crashes-when-rotated
+  // see onDestroy() ?
+
+  //TODO see https://developer.android.com/reference/android/app/Activity.html#onDestroy() :
+  // use onPause()/onStop()/onSaveInstanceState(Bundle)/onResume to display the last
+  //translation after this app was inactive?
 }
